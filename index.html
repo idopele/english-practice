@@ -3,45 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Master Pro - Adventure Mode</title>
+    <title>English Master Pro - Smart Learning</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --primary: #4a90e2; --success: #2ecc71; --error: #e74c3c; --bg: #f0f2f5; --hint: #f39c12; }
-        body { font-family: 'Assistant', sans-serif; background-color: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow-x: hidden; }
-        .card { background: white; width: 95%; max-width: 500px; padding: 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; position: relative; }
-        
-        /* מערכת חיים ודרגות */
+        :root { --primary: #4a90e2; --success: #2ecc71; --error: #e74c3c; --bg: #f4f7f6; --hint: #f39c12; }
+        body { font-family: 'Assistant', sans-serif; background-color: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
+        .card { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); text-align: center; position: relative; }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .hearts { font-size: 20px; color: var(--error); }
-        .rank-badge { background: #eee; padding: 5px 12px; border-radius: 15px; font-size: 14px; font-weight: bold; color: #555; }
-        
-        .stats { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; color: #777; font-size: 14px; }
-        .progress-container { width: 100%; height: 12px; background: #eee; border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
-        #progress { height: 100%; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); width: 0%; transition: 0.5s; }
-        
-        .word-to-translate { font-size: 42px; margin: 10px 0; color: #2c3e50; font-weight: 900; letter-spacing: -1px; }
-        .question-type { font-size: 14px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-
+        .rank-badge { background: #e8f0fe; padding: 5px 12px; border-radius: 15px; font-size: 13px; font-weight: bold; color: var(--primary); }
+        .stats { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #888; font-size: 13px; }
+        .progress-container { width: 100%; height: 8px; background: #eee; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        #progress { height: 100%; background: var(--primary); width: 0%; transition: 0.5s; }
+        .word-to-translate { font-size: 42px; margin: 15px 0; color: #2c3e50; font-weight: 800; }
+        .question-type { font-size: 14px; color: #aaa; font-weight: bold; letter-spacing: 1px; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .option-btn { padding: 18px; font-size: 18px; border: 2px solid #f0f0f0; border-radius: 15px; cursor: pointer; background: white; transition: 0.2s; font-weight: 600; color: #444; }
-        .option-btn:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
-        
+        .option-btn { padding: 18px; font-size: 18px; border: 2px solid #f0f0f0; border-radius: 15px; cursor: pointer; background: white; transition: 0.2s; font-weight: 600; }
+        .option-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
         #spellingArea { display: none; margin-top: 20px; }
-        input { width: 100%; padding: 18px; font-size: 22px; border: 3px solid #eee; border-radius: 15px; text-align: center; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); background: #fcfdfe; }
-
+        input { width: 100%; padding: 18px; font-size: 22px; border: 3px solid #eee; border-radius: 15px; text-align: center; outline: none; }
         .action-btns { display: flex; gap: 10px; margin-top: 25px; }
-        button.action { padding: 15px; border-radius: 15px; cursor: pointer; border: none; transition: 0.2s; font-weight: bold; font-size: 18px; }
-        .btn-speak { background: #ebf3ff; color: var(--primary); width: 60px; }
-        .btn-hint { background: #fff4e5; color: var(--hint); flex: 1; }
-        .btn-check { background: var(--success); color: white; flex: 2; box-shadow: 0 4px 0 #27ae60; }
-        .btn-check:active { transform: translateY(4px); box-shadow: none; }
-
-        .btn-next { background: var(--primary); color: white; display: none; width: 100%; margin-top: 20px; padding: 18px; border-radius: 15px; font-size: 20px; }
-
+        button.action { padding: 15px; border-radius: 15px; cursor: pointer; border: none; transition: 0.2s; font-weight: bold; font-size: 18px; flex: 1; }
+        .btn-speak { background: #f0f4f8; color: var(--primary); max-width: 60px; }
+        .btn-hint { background: #fff4e5; color: var(--hint); }
+        .btn-check { background: var(--success); color: white; flex: 2; }
+        .btn-next { background: var(--primary); color: white; display: none; width: 100%; margin-top: 20px; padding: 18px; border-radius: 15px; font-size: 20px; border: none; cursor: pointer; }
         .feedback { margin-top: 20px; min-height: 40px; font-size: 24px; font-weight: bold; }
-        .hint-text { color: var(--hint); font-size: 18px; margin-top: 10px; background: #fff9f0; padding: 8px; border-radius: 8px; display: none; }
-        
+        .footer-tools { margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px; }
+        .btn-reset { background: none; border: 1px solid #ffcccc; color: #ff9999; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 12px; }
+        .btn-reset:hover { background: #fff5f5; color: var(--error); border-color: var(--error); }
         .shake { animation: shake 0.4s; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
     </style>
@@ -51,17 +41,17 @@
 <div class="card" id="gameCard">
     <div class="top-bar">
         <div class="hearts" id="hearts">❤️❤️❤️</div>
-        <div class="rank-badge" id="rankBadge">Beginner</div>
+        <div class="rank-badge" id="rankBadge">Learning...</div>
     </div>
     
     <div class="stats">
         <span>Score: <span id="score">0</span></span>
-        <span>Word: <span id="count">1</span>/<span id="total">0</span></span>
+        <span>Mastery: <span id="masteryPercent">0</span>%</span>
     </div>
     <div class="progress-container"><div id="progress"></div></div>
     
     <div id="gameArea">
-        <div class="question-type" id="qType">TRANSLATE</div>
+        <div class="question-type" id="qType">---</div>
         <div class="word-to-translate" id="mainWord">---</div>
 
         <div id="multipleChoice" class="options-grid"></div>
@@ -79,18 +69,21 @@
 
     <button class="btn-next" id="nextBtn" onclick="setupRound()">Next Word ➔</button>
     <div id="feedback" class="feedback"></div>
-    <div id="hintDisplay" class="hint-text"></div>
+    <div id="hintDisplay" style="color:var(--hint); margin-top:10px; display:none;"></div>
+
+    <div class="footer-tools">
+        <button class="btn-reset" onclick="resetProgress()">Reset All Progress 🔄</button>
+    </div>
 </div>
 
 <script>
-    // רשימת המילים המלאה
-    let vocabulary = [
+    const baseVocabulary = [
         { en: "as well as", he: "וגם / בנוסף" }, { en: "grow", he: "לגדול / לצמוח" }, { en: "however", he: "למרות זאת" },
         { en: "save", he: "לחסוך / להציל" }, { en: "throw away", he: "לזרוק" }, { en: "Earth", he: "כדור הארץ" },
         { en: "happen", he: "לקרות" }, { en: "not too", he: "לא יותר מדי" }, { en: "simple", he: "פשוט" },
         { en: "trash", he: "זבל" }, { en: "enough", he: "מספיק" }, { en: "hill", he: "גבעה" },
         { en: "refrigerator", he: "מקרר" }, { en: "the future", he: "העתיד" }, { en: "waste", he: "בזבוז" },
-        { en: "across", he: "מעבר ל / מצד לצד" }, { en: "high", he: "גבוה" }, { en: "photo", he: "תצלום / תמונה" },
+        { en: "across", he: "מעבר ל" }, { en: "high", he: "גבוה" }, { en: "photo", he: "תצלום" },
         { en: "suitcase", he: "מזוודה" }, { en: "without", he: "בלי" }, { en: "agree", he: "להסכים" },
         { en: "narrow", he: "צר" }, { en: "slow", he: "איטי" }, { en: "toothbrush", he: "מברשת שיניים" },
         { en: "around", he: "מסביב" }, { en: "part", he: "חלק" }, { en: "stairs", he: "מדרגות" },
@@ -106,35 +99,38 @@
         { en: "follow", he: "לעקוב" }, { en: "hope", he: "לקוות" }, { en: "result", he: "תוצאה" }
     ];
 
-    let currentWord;
-    let score = 0;
-    let solvedCount = 0;
-    let lives = 3;
-    let reviewQueue = []; // מילים לסיבוב חוזר
-    const totalWords = vocabulary.length;
+    let wordStats = JSON.parse(localStorage.getItem('english_master_stats')) || {};
+    let currentWord, score = 0, lives = 3, sessionCount = 0;
+
+    function saveProgress() { localStorage.setItem('english_master_stats', JSON.stringify(wordStats)); }
+
+    function resetProgress() {
+        if(confirm("Are you sure? This will delete all learned word data.")) {
+            localStorage.removeItem('english_master_stats');
+            location.reload();
+        }
+    }
+
+    function getNextWord() {
+        // Weighted Random Selection: מילים עם משקל גבוה נבחרות יותר
+        let pool = [];
+        baseVocabulary.forEach(word => {
+            const weight = wordStats[word.en]?.weight || 10;
+            for(let i=0; i<weight; i++) pool.push(word);
+        });
+        return pool[Math.floor(Math.random() * pool.length)];
+    }
 
     function setupRound() {
-        if (lives <= 0) {
-            showGameOver();
-            return;
-        }
-
-        if (solvedCount >= vocabulary.length) {
-            if (reviewQueue.length > 0) {
-                vocabulary = [...reviewQueue];
-                reviewQueue = [];
-                solvedCount = 0;
-            } else {
-                showWin();
-                return;
-            }
-        }
-
-        currentWord = vocabulary[solvedCount];
-        const isChoice = Math.random() > 0.4; // 60% סיכוי לאמריקאי, 40% לאיות
-
+        if (lives <= 0) return showGameOver();
+        currentWord = getNextWord();
+        const rand = Math.random();
         resetUI();
-        if (isChoice) showMultipleChoice(); else showSpelling();
+        
+        if (rand < 0.2) showAudioChallenge();
+        else if (rand < 0.6) showMultipleChoice();
+        else showSpelling();
+        
         updateStats();
     }
 
@@ -143,71 +139,68 @@
         document.getElementById('hintDisplay').style.display = 'none';
         document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('actionContainer').style.display = 'flex';
-        document.getElementById('multipleChoice').innerHTML = '';
         document.getElementById('gameCard').classList.remove('shake');
+        document.getElementById('mainWord').style.visibility = 'visible';
+    }
+
+    function showAudioChallenge() {
+        document.getElementById('qType').innerText = "LISTEN AND SPELL";
+        document.getElementById('mainWord').innerText = "🔊 ???";
+        document.getElementById('multipleChoice').style.display = 'none';
+        document.getElementById('spellingArea').style.display = 'block';
+        document.getElementById('checkBtn').style.display = 'block';
+        document.getElementById('englishInput').value = '';
+        document.getElementById('englishInput').focus();
+        speakCurrent();
     }
 
     function showMultipleChoice() {
-        document.getElementById('qType').innerText = "CHOOSE THE CORRECT TRANSLATION";
+        document.getElementById('qType').innerText = "CHOOSE TRANSLATION";
         document.getElementById('mainWord').innerText = currentWord.en;
         document.getElementById('multipleChoice').style.display = 'grid';
         document.getElementById('spellingArea').style.display = 'none';
         document.getElementById('checkBtn').style.display = 'none';
-
         let options = [currentWord.he];
         while (options.length < 4) {
-            let r = vocabulary[Math.floor(Math.random() * vocabulary.length)].he;
+            let r = baseVocabulary[Math.floor(Math.random() * baseVocabulary.length)].he;
             if (!options.includes(r)) options.push(r);
         }
         options.sort(() => Math.random() - 0.5).forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
+            const btn = document.createElement('button'); btn.className = 'option-btn'; btn.innerText = opt;
             btn.onclick = () => { if(opt === currentWord.he) success(); else fail(); };
             document.getElementById('multipleChoice').appendChild(btn);
         });
     }
 
     function showSpelling() {
-        document.getElementById('qType').innerText = "HOW DO YOU SPELL THIS?";
+        document.getElementById('qType').innerText = "HOW DO YOU SPELL?";
         document.getElementById('mainWord').innerText = currentWord.he;
         document.getElementById('multipleChoice').style.display = 'none';
         document.getElementById('spellingArea').style.display = 'block';
         document.getElementById('checkBtn').style.display = 'block';
-        document.getElementById('englishInput').value = '';
-        document.getElementById('englishInput').focus();
-    }
-
-    function giveHint() {
-        speakCurrent();
-        score -= 2;
-        const hintBox = document.getElementById('hintDisplay');
-        hintBox.style.display = 'block';
-        // רמז השלמת אותיות
-        let h = currentWord.en[0] + " _ ".repeat(currentWord.en.length - 1);
-        if (currentWord.en.includes(" ")) h = currentWord.en.split(" ").map(w => w[0] + "_".repeat(w.length-1)).join(" ");
-        hintBox.innerText = "Hint: " + h;
-        updateStats();
+        document.getElementById('englishInput').value = ''; document.getElementById('englishInput').focus();
     }
 
     function success() {
-        score += 10;
-        solvedCount++;
-        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
-        document.getElementById('feedback').innerText = "Amazing! 🌟";
+        if (!wordStats[currentWord.en]) wordStats[currentWord.en] = { weight: 10 };
+        wordStats[currentWord.en].weight = Math.max(1, wordStats[currentWord.en].weight - 2); // הורדת קושי
+        score += 10; sessionCount++;
+        saveProgress();
+        confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
+        document.getElementById('feedback').innerText = "Correct! ✨";
         document.getElementById('feedback').style.color = "var(--success)";
         speakCurrent();
         endRound();
     }
 
     function fail() {
+        if (!wordStats[currentWord.en]) wordStats[currentWord.en] = { weight: 10 };
+        wordStats[currentWord.en].weight = Math.min(25, wordStats[currentWord.en].weight + 5); // העלאת קושי
         lives--;
-        reviewQueue.push(currentWord); // תווסף לסיבוב חוזר
+        saveProgress();
         document.getElementById('gameCard').classList.add('shake');
-        document.getElementById('feedback').innerText = "Oops! Correct: " + (document.getElementById('spellingArea').style.display === 'block' ? currentWord.en : currentWord.he);
+        document.getElementById('feedback').innerText = "Answer: " + currentWord.en;
         document.getElementById('feedback').style.color = "var(--error)";
-        solvedCount++;
-        updateStats();
         endRound();
     }
 
@@ -220,32 +213,26 @@
 
     function updateStats() {
         document.getElementById('score').innerText = score;
-        document.getElementById('count').innerText = solvedCount;
-        document.getElementById('total').innerText = vocabulary.length;
-        document.getElementById('progress').style.width = (solvedCount / vocabulary.length) * 100 + "%";
         document.getElementById('hearts').innerText = "❤️".repeat(lives);
         
-        // עדכון דרגה
-        let rank = "Beginner";
-        if (score > 100) rank = "Apprentice";
-        if (score > 300) rank = "English Pro";
-        if (score > 500) rank = "Legend 🏆";
-        document.getElementById('rankBadge').innerText = rank;
+        // חישוב אחוז שליטה (כמה מילים ירדו מתחת למשקל 5)
+        const mastered = Object.values(wordStats).filter(s => s.weight < 5).length;
+        const mastery = Math.round((mastered / baseVocabulary.length) * 100);
+        document.getElementById('masteryPercent').innerText = mastery;
+        document.getElementById('progress').style.width = mastery + "%";
+        document.getElementById('rankBadge').innerText = mastery > 80 ? "Master 🏆" : mastery > 40 ? "Pro ⚡" : "Learning";
+    }
+
+    function giveHint() {
+        const hint = currentWord.en[0] + "..." + currentWord.en.slice(-1);
+        document.getElementById('hintDisplay').innerText = "Hint: " + hint;
+        document.getElementById('hintDisplay').style.display = 'block';
+        score -= 2; updateStats();
     }
 
     function speakCurrent() {
         const m = new SpeechSynthesisUtterance(currentWord.en);
-        m.lang = 'en-US'; m.rate = 0.8;
-        window.speechSynthesis.speak(m);
-    }
-
-    function showGameOver() {
-        document.querySelector('.card').innerHTML = `<h1 style="color:var(--error)">Game Over!</h1><p>You ran out of hearts.</p><button onclick="location.reload()" class="btn-next" style="display:block">Try Again</button>`;
-    }
-
-    function showWin() {
-        confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
-        document.querySelector('.card').innerHTML = `<h1 style="color:var(--success)">🏆 You Did It!</h1><p>Final Score: ${score}</p><p>Rank: ${document.getElementById('rankBadge').innerText}</p><button onclick="location.reload()" class="btn-next" style="display:block">Play Again</button>`;
+        m.lang = 'en-US'; m.rate = 0.8; window.speechSynthesis.speak(m);
     }
 
     function handleSpellingCheck() {
@@ -253,8 +240,11 @@
         else fail();
     }
 
-    document.getElementById('englishInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSpellingCheck(); });
+    function showGameOver() {
+        document.querySelector('.card').innerHTML = `<h1>Game Over!</h1><p>You did great. Practice makes perfect!</p><button onclick="location.reload()" class="btn-next" style="display:block">Restart Session</button>`;
+    }
 
+    document.getElementById('englishInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSpellingCheck(); });
     setupRound();
 </script>
 </body>
