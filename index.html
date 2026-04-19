@@ -252,8 +252,16 @@
     }
 
     function speakWord() {
-        const m = new SpeechSynthesisUtterance(gameState.pool[gameState.currentIdx].en);
-        m.lang = 'en-US'; m.rate = 0.8; window.speechSynthesis.speak(m);
+        window.speechSynthesis.cancel();
+
+        const word = gameState.pool[gameState.currentIdx].en;
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'en-US'; 
+        utterance.rate = 0.7;  // race
+        utterance.pitch = 1;   // Natural tune
+        utterance.volume = 1;  // max valume
+
+        window.speechSynthesis.speak(utterance);
     }
 
     function updateUI() {
