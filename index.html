@@ -253,6 +253,19 @@
         document.getElementById('spellInput').value = '';
     }
 
+    function resetStats() {
+        if (confirm("האם אתה בטוח שברצונך למחוק את כל היסטוריית הלמידה והמדדים? פעולה זו אינה ניתנת לביטול.")) {
+            // מחיקת הנתונים הספציפיים של האפליקציה מהאחסון המקומי
+            localStorage.removeItem('eng_pro_stats');
+            localStorage.removeItem('streak');
+            localStorage.removeItem('last_play');
+            
+            // הודעה למשתמש ורענון הדף כדי לאפס את המשתנים בזיכרון
+            alert("הנתונים אופסו בהצלחה.");
+            location.reload();
+        }
+    }
+
     function updateUI() {
         document.getElementById('lives').innerText = "❤️".repeat(state.lives);
         document.getElementById('progressFill').style.width = (state.current / state.pool.length) * 100 + "%";
