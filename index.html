@@ -268,4 +268,38 @@
         });
         const acc = (totalC + totalW) > 0 ? Math.round((totalC / (totalC + totalW)) * 100) : 0;
         document.getElementById('avgAccuracy').innerText = acc + "%";
-        document.getElementById('struggleList').
+        document.getElementById('struggleList').innerHTML = struggleHTML || "אין טעויות עדיין!";
+    }
+
+    function resetRoundUI() {
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('optionsArea').innerHTML = '';
+        document.getElementById('gameScreen').classList.remove('shake');
+        document.getElementById('spellInput').value = '';
+        document.getElementById('hintDisplay').style.display = 'none';
+    }
+
+    function updateUI() {
+        document.getElementById('lives').innerText = "❤️".repeat(state.lives);
+        document.getElementById('progressFill').style.width = (state.current / state.pool.length) * 100 + "%";
+    }
+
+    function endSession() {
+        state.stats.sessions++; save();
+        alert("סבב תרגול הסתיים!");
+        location.reload();
+    }
+
+    function resetStats() {
+        if(confirm("למחוק הכל?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    function save() { localStorage.setItem('eng_pro_stats', JSON.stringify(state.stats)); }
+    initCategories();
+</script>
+</body>
+</html>
