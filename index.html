@@ -12,17 +12,40 @@
         body { background-color: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
         .app-container { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); overflow: hidden; position: relative; }
         
-        /* Screens */
         .screen { padding: 30px; display: none; }
         .active { display: block; }
+
+        /* כפתורים ועיצוב */
+        .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; width: 100%; display: block; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: white; border: 2px solid #e2e8f0; color: var(--text); }
+        
+        /* שינוי 1: עיצוב כפתור ה-Danger ב-CSS */
+        .btn-danger {
+            background: #fee2e2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+            margin-top: 20px;
+            font-size: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .btn-danger:hover {
+            background: #ef4444;
+            color: white;
+        }
 
         /* Setup Screen */
         .hero-title { font-size: 30px; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
         .category-list { display: grid; gap: 10px; margin-top: 20px; }
-        .cat-btn { background: #f1f5f9; border: 2px solid transparent; padding: 18px; border-radius: 20px; cursor: pointer; text-align: right; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; }
+        .cat-btn { background: #f1f5f9; border: 2px solid transparent; padding: 18px; border-radius: 20px; cursor: pointer; text-align: right; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; width: 100%; }
         .cat-btn:hover { border-color: var(--primary); background: #eef2ff; }
 
-        /* Parent Dashboard */
+        /* Dashboard Items */
         .dash-card { background: #f8fafc; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .stat-box { background: white; padding: 10px; border-radius: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
@@ -35,19 +58,14 @@
         .top-nav { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; }
         .progress-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
         #progressFill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        .main-word { font-size: 42px; font-weight: 800; margin: 20px 0; }
+        .main-word { font-size: 42px; font-weight: 800; margin: 20px 0; text-align: center; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; width: 100%; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { background: white; border: 2px solid #e2e8f0; }
-        
         input#spellInput { width: 100%; padding: 18px; font-size: 22px; border: 3px solid #eee; border-radius: 15px; text-align: center; margin-bottom: 15px; outline: none; }
-        
         .footer-parent { margin-top: 20px; padding-top: 15px; border-top: 1px solid #f1f5f9; text-align: center; }
         .parent-link { color: #cbd5e1; font-size: 18px; cursor: pointer; }
 
         .shake { animation: shake 0.4s; }
-        @keyframes shake { 0%,100% {transform:0;} 25% {transform:translateX(-8px);} 75% {transform:translateX(8px);} }
+        @keyframes shake { 0%,100% {transform: translateX(0);} 25% {transform:translateX(-8px);} 75% {transform:translateX(8px);} }
     </style>
 </head>
 <body>
@@ -56,8 +74,7 @@
     <div id="setupScreen" class="screen active">
         <h1 class="hero-title">English Prep 📝</h1>
         <p>Hi! Let's get ready for the test!</p>
-        <div class="category-list" id="catList">
-            </div>
+        <div class="category-list" id="catList"></div>
         <div class="footer-parent">
             <span class="parent-link" onclick="showDashboard()">🔒 Parent Dashboard</span>
         </div>
@@ -66,7 +83,7 @@
     <div id="gameScreen" class="screen">
         <div class="top-nav">
             <div id="lives">❤️❤️❤️</div>
-            <div>🔥 <span id="streak">0</span></div>
+            <div>Study Mode</div>
         </div>
         <div class="progress-bar"><div id="progressFill"></div></div>
         <div style="text-align: center;">
@@ -91,14 +108,12 @@
             </div>
         </div>
 
-        <h3 style="font-size:16px;">⚠️ מילים מאתגרות (זקוקות לתרגול):</h3>
+        <h3 style="font-size:16px;">⚠️ מילים מאתגרות:</h3>
         <div class="dash-card word-list-scroll" id="struggleList"></div>
 
-        <h3 style="font-size:16px;">📉 ביצועים לפי נושא:</h3>
-        <div class="dash-card" id="catStats"></div>
-
         <button class="btn btn-outline" onclick="location.reload()">Back to Home</button>
-        <button class="btn" style="color:var(--error); font-size:12px; margin-top:10px;" onclick="resetStats()">Reset All Data</button>
+        
+        <button class="btn-danger" onclick="resetStats()">Reset All Data ⚠️</button>
     </div>
 </div>
 
@@ -112,7 +127,6 @@
         { en: "especially", he: "במיוחד", cat: "Adverbs" }, { en: "exactly", he: "בדיוק", cat: "Adverbs" },
         { en: "immediately", he: "מיד", cat: "Adverbs" }, { en: "probably", he: "כנראה", cat: "Adverbs" },
         { en: "suitcase", he: "מזוודה", cat: "Home" }, { en: "vacation", he: "חופשה", cat: "Home" }
-        // ניתן להוסיף עוד מילים כאן
     ];
 
     let state = {
@@ -124,6 +138,7 @@
     function initCategories() {
         const cats = ['All', ...new Set(vocabulary.map(v => v.cat))];
         const container = document.getElementById('catList');
+        container.innerHTML = "";
         cats.forEach(c => {
             container.innerHTML += `<button class="cat-btn" onclick="startGame('${c}')"><b>${c} Practice</b> <span>➔</span></button>`;
         });
@@ -132,6 +147,7 @@
     function startGame(cat) {
         state.pool = cat === 'All' ? [...vocabulary] : vocabulary.filter(v => v.cat === cat);
         state.pool.sort(() => Math.random() - 0.5);
+        state.current = 0; state.lives = 3; state.sessionCorrect = 0; state.sessionTotal = 0;
         showScreen('gameScreen');
         nextRound();
     }
@@ -143,14 +159,11 @@
 
     function nextRound() {
         if (state.lives <= 0 || state.current >= state.pool.length) return endSession();
-        
         const word = state.pool[state.current];
         const isSpell = Math.random() > 0.5;
         resetRoundUI();
-
         document.getElementById('targetWord').innerText = isSpell ? word.he : word.en;
         document.getElementById('qLabel').innerText = isSpell ? "HOW DO YOU SPELL?" : "CHOOSE TRANSLATION";
-        
         if (isSpell) {
             document.getElementById('optionsArea').style.display = 'none';
             document.getElementById('spellArea').style.display = 'block';
@@ -180,22 +193,18 @@
     function handleAnswer(correct) {
         const word = state.pool[state.current];
         if(!state.stats.words[word.en]) state.stats.words[word.en] = { correct: 0, wrong: 0, cat: word.cat };
-        
         if(correct) {
-            state.sessionCorrect++;
-            state.stats.words[word.en].correct++;
+            state.sessionCorrect++; state.stats.words[word.en].correct++;
             confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
             document.getElementById('feedback').innerText = "Excellent! ✨";
             document.getElementById('feedback').style.color = "var(--success)";
         } else {
-            state.lives--;
-            state.stats.words[word.en].wrong++;
+            state.lives--; state.stats.words[word.en].wrong++;
             document.getElementById('gameScreen').classList.add('shake');
             document.getElementById('feedback').innerText = "Correct: " + word.en;
             document.getElementById('feedback').style.color = "var(--error)";
         }
-        state.sessionTotal++;
-        state.current++;
+        state.sessionTotal++; state.current++;
         save();
         document.getElementById('optionsArea').style.display = 'none';
         document.getElementById('spellArea').style.display = 'none';
@@ -204,7 +213,8 @@
     }
 
     function checkSpelling() {
-        handleAnswer(document.getElementById('spellInput').value.trim().toLowerCase() === state.pool[state.current].en.toLowerCase());
+        const input = document.getElementById('spellInput').value.trim().toLowerCase();
+        handleAnswer(input === state.pool[state.current].en.toLowerCase());
     }
 
     function speakWord(txt) {
@@ -217,32 +227,15 @@
         showScreen('parentScreen');
         const s = state.stats;
         document.getElementById('totalSessions').innerText = s.sessions;
-        
-        // חישוב דיוק
-        let totalC = 0, totalW = 0;
-        let struggleHTML = "";
-        let catScore = {};
-
+        let totalC = 0, totalW = 0, struggleHTML = "";
         Object.keys(s.words).forEach(w => {
             const data = s.words[w];
             totalC += data.correct; totalW += data.wrong;
-            if(data.wrong > 1) {
-                struggleHTML += `<div class="bad-word"><span>${w}</span> <b style="color:var(--error)">${data.wrong} טעויות</b></div>`;
-            }
-            if(!catScore[data.cat]) catScore[data.cat] = { c: 0, t: 0 };
-            catScore[data.cat].c += data.correct; catScore[data.cat].t += (data.correct + data.wrong);
+            if(data.wrong > 0) struggleHTML += `<div class="bad-word"><span>${w}</span> <b style="color:var(--error)">${data.wrong} טעויות</b></div>`;
         });
-
         const acc = (totalC + totalW) > 0 ? Math.round((totalC / (totalC + totalW)) * 100) : 0;
         document.getElementById('avgAccuracy').innerText = acc + "%";
-        document.getElementById('struggleList').innerHTML = struggleHTML || "אין עדיין מילים מאתגרות. מצוין!";
-
-        let catHTML = "";
-        Object.keys(catScore).forEach(c => {
-            let p = Math.round((catScore[c].c / catScore[c].t) * 100);
-            catHTML += `<div style="margin-bottom:5px;">${c}: ${p}% שליטה</div>`;
-        });
-        document.getElementById('catStats').innerHTML = catHTML || "עוד אין נתונים לפי נושא.";
+        document.getElementById('struggleList').innerHTML = struggleHTML || "אין טעויות עדיין!";
     }
 
     function resetRoundUI() {
@@ -253,34 +246,26 @@
         document.getElementById('spellInput').value = '';
     }
 
-    function resetStats() {
-        if (confirm("האם אתה בטוח שברצונך למחוק את כל היסטוריית הלמידה והמדדים? פעולה זו אינה ניתנת לביטול.")) {
-            // מחיקת הנתונים הספציפיים של האפליקציה מהאחסון המקומי
-            localStorage.removeItem('eng_pro_stats');
-            localStorage.removeItem('streak');
-            localStorage.removeItem('last_play');
-            
-            // הודעה למשתמש ורענון הדף כדי לאפס את המשתנים בזיכרון
-            alert("הנתונים אופסו בהצלחה.");
-            location.reload();
-        }
-    }
-
     function updateUI() {
         document.getElementById('lives').innerText = "❤️".repeat(state.lives);
         document.getElementById('progressFill').style.width = (state.current / state.pool.length) * 100 + "%";
     }
 
     function endSession() {
-        state.stats.sessions++;
-        save();
-        alert(`סיימת! דיוק בסבב הזה: ${Math.round((state.sessionCorrect/state.sessionTotal)*100)}%`);
+        state.stats.sessions++; save();
+        alert("סבב תרגול הסתיים!");
         location.reload();
     }
 
-    function save() { localStorage.setItem('eng_pro_stats', JSON.stringify(state.stats)); }
-    function resetAll() { if(confirm("Clear history?")) { localStorage.clear(); location.reload(); } }
+    function resetStats() {
+        if(confirm("למחוק את כל נתוני התרגול והסטטיסטיקה?")) {
+            localStorage.clear();
+            alert("הנתונים נמחקו בהצלחה.");
+            location.reload();
+        }
+    }
 
+    function save() { localStorage.setItem('eng_pro_stats', JSON.stringify(state.stats)); }
     initCategories();
 </script>
 </body>
