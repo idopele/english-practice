@@ -3,72 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Master Pro - Dark Mode Edition</title>
+    <title>מערכת התרגול של עידו</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* הגדרת משתני צבע למצב יום ולמצב לילה */
-        :root { 
-            --primary: #6366f1; --success: #10b981; --error: #ef4444; 
-            --bg: #f8fafc; --text: #1e293b; --card-bg: #ffffff; 
-            --hint: #f59e0b; --input-bg: #ffffff; --border: #e2e8f0;
-        }
-
-        [data-theme="dark"] {
-            --bg: #0f172a; --text: #f1f5f9; --card-bg: #1e293b; 
-            --input-bg: #334155; --border: #475569;
-        }
-
-        * { box-sizing: border-box; font-family: 'Assistant', sans-serif; transition: background-color 0.3s, color 0.3s; }
-        body { background-color: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .app-container { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); overflow: hidden; position: relative; }
-        
-        .screen { padding: 30px; display: none; }
+        :root { --primary: #6366f1; --success: #10b981; --error: #ef4444; --bg: #f8fafc; --text: #1e293b; --card-bg: #ffffff; --border: #e2e8f0; }
+        [data-theme="dark"] { --bg: #0f172a; --text: #f1f5f9; --card-bg: #1e293b; --border: #475569; }
+        * { box-sizing: border-box; font-family: 'Assistant', sans-serif; transition: 0.3s; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; margin: 0; padding: 10px; display: flex; justify-content: center; }
+        .app-container { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); overflow: hidden; position: relative; align-self: flex-start; }
+        .screen { padding: 20px; display: none; }
         .active { display: block; }
-
-        /* כפתור החלפת מצב יום/לילה */
-        .theme-toggle { position: absolute; top: 20px; left: 20px; background: none; border: none; font-size: 24px; cursor: pointer; z-index: 10; }
-
-        .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; width: 100%; display: block; }
+        .theme-toggle { position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 20px; cursor: pointer; z-index: 10; }
+        .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; margin-bottom: 10px; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
-        
-        .btn-danger {
-            background: #fee2e2; color: #ef4444; border: 1px solid #fecaca;
-            margin-top: 20px; font-size: 14px; padding: 12px; border-radius: 12px;
-            font-weight: bold; cursor: pointer; transition: 0.2s; width: 100%;
-        }
-        .btn-danger:hover { background: #ef4444; color: white; }
-
-        .hero-title { font-size: 30px; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
-        .category-list { display: grid; gap: 10px; margin-top: 20px; }
-        .cat-btn { background: var(--input-bg); border: 2px solid transparent; padding: 18px; border-radius: 20px; cursor: pointer; text-align: right; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; width: 100%; color: var(--text); }
-        .cat-btn:hover { border-color: var(--primary); background: #eef2ff; }
-        [data-theme="dark"] .cat-btn:hover { background: #334155; border-color: var(--primary); }
-
-        .dash-card { background: var(--input-bg); border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
-        .stat-box { background: var(--card-bg); padding: 10px; border-radius: 12px; text-align: center; }
-        .stat-val { font-size: 20px; font-weight: 800; color: var(--primary); display: block; }
-        .bad-word { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid var(--border); font-size: 14px; }
-
-        .top-nav { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; }
-        .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
-        #progressFill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        .main-word { font-size: 42px; font-weight: 800; margin: 20px 0; text-align: center; }
-        
-        input#spellInput { width: 100%; padding: 18px; font-size: 22px; border: 3px solid var(--border); border-radius: 15px; text-align: center; margin-bottom: 15px; outline: none; background: var(--input-bg); color: var(--text); }
-        input#spellInput:focus { border-color: var(--primary); }
-        
-        .spell-controls { display: flex; gap: 10px; margin-bottom: 15px; }
-        .btn-small { padding: 12px; border-radius: 12px; flex: 1; font-size: 14px; }
-        .btn-audio { background: #eef2ff; color: var(--primary); border: 1px solid #e0e7ff; }
-        .btn-hint { background: #fffbeb; color: var(--hint); border: 1px solid #fef3c7; }
-
-        .footer-parent { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center; }
-        .parent-link { color: #94a3b8; font-size: 16px; cursor: pointer; }
-
-        .shake { animation: shake 0.4s; }
-        @keyframes shake { 0%,100% {transform: translateX(0);} 25% {transform:translateX(-8px);} 75% {transform:translateX(8px);} }
+        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); text-align: right; }
+        .subject-card { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; padding: 20px; border-radius: 24px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .subject-card.bible { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .main-word { font-size: 26px; font-weight: 800; margin: 20px 0; text-align: center; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        input#spellInput { width: 100%; padding: 15px; font-size: 20px; border: 3px solid var(--border); border-radius: 15px; text-align: center; margin-bottom: 10px; background: var(--card-bg); color: var(--text); outline: none; }
+        .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0; }
+        #progressFill { height: 100%; background: var(--primary); width: 0%; }
     </style>
 </head>
 <body data-theme="light">
@@ -76,106 +31,181 @@
 <div class="app-container">
     <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon">🌙</button>
 
-    <div id="setupScreen" class="screen active">
-        <h1 class="hero-title">English Prep 📝</h1>
-        <p>Choose a topic to start:</p>
-        <div class="category-list" id="catList"></div>
-        <div class="footer-parent">
-            <span class="parent-link" onclick="showDashboard()">🔒 Parent Dashboard</span>
+    <div id="subjectScreen" class="screen active">
+        <h1 style="font-weight: 800;">היי! 👋</h1>
+        <p>חומר למבחן - 29.4.2026</p>
+        <div class="subject-card" onclick="startApp('english')">
+            <div><h2 style="margin:0;">English</h2><small>כל אוצר המילים מהדף</small></div>
+            <span>🇬🇧</span>
+        </div>
+        <div class="subject-card bible" onclick="startApp('bible')">
+            <div><h2 style="margin:0;">תנ"ך</h2><small>יהושע ז'-י'</small></div>
+            <span>📜</span>
         </div>
     </div>
 
     <div id="gameScreen" class="screen">
-        <div class="top-nav">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button onclick="goHome()" style="background:none; border:none; cursor:pointer;">🏠</button>
             <div id="lives">❤️❤️❤️</div>
-            <div id="streakDisplay">🔥 0</div>
         </div>
         <div class="progress-bar"><div id="progressFill"></div></div>
-        <div style="text-align: center;">
-            <div id="qLabel" style="color:#94a3b8; font-size:12px; font-weight:bold;">TRANSLATE</div>
-            <div id="targetWord" class="main-word">---</div>
-            <div id="hintDisplay" style="color:var(--hint); font-weight:bold; margin-bottom:10px; display:none;"></div>
-        </div>
-        
-        <div id="optionsArea" class="options-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
-        
+        <div id="targetWord" class="main-word">---</div>
+        <div id="optionsArea" style="display: grid; gap: 8px;"></div>
         <div id="spellArea" style="display:none;">
-            <input type="text" id="spellInput" placeholder="Type in English..." autocomplete="off">
-            <div class="spell-controls">
-                <button class="btn btn-small btn-audio" onclick="speakCurrent()">🔊 שמע</button>
-                <button class="btn btn-small btn-hint" onclick="showHint()">💡 רמז</button>
-            </div>
-            <button class="btn btn-primary" onclick="checkSpelling()">Check Answer</button>
+            <input type="text" id="spellInput" placeholder="כתוב באנגלית..." autocomplete="off">
+            <button class="btn btn-primary" onclick="checkSpelling()">בדיקה</button>
         </div>
-
-        <button id="nextBtn" class="btn btn-primary" style="display:none; margin-top:20px;" onclick="nextRound()">Continue ➔</button>
-        <div id="feedback" style="text-align:center; margin-top:20px; font-weight:800; font-size:20px;"></div>
-    </div>
-
-    <div id="parentScreen" class="screen">
-        <h2 class="hero-title">Parent Control 📊</h2>
-        <div class="dash-card">
-            <div class="stat-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="stat-box"><span class="stat-val" id="totalSessions">0</span><span class="stat-label">סבבים</span></div>
-                <div class="stat-box"><span class="stat-val" id="avgAccuracy">0%</span><span class="stat-label">דיוק</span></div>
-            </div>
-        </div>
-        <h3 style="font-size:16px;">⚠️ מילים מאתגרות:</h3>
-        <div class="dash-card word-list-scroll" id="struggleList"></div>
-        <button class="btn btn-outline" onclick="location.reload()">Back Home</button>
-        <button class="btn-danger" onclick="resetStats()">Reset All Data ⚠️</button>
+        <button id="nextBtn" class="btn btn-primary" style="display:none;" onclick="nextRound()">המשך ➔</button>
+        <div id="feedback" style="text-align:center; margin-top:15px; font-weight:800;"></div>
     </div>
 </div>
 
 <script>
-    // --- ניהול DARK MODE ---
-    function toggleTheme() {
-        const body = document.body;
-        const current = body.getAttribute('data-theme');
-        const next = current === 'light' ? 'dark' : 'light';
-        body.setAttribute('data-theme', next);
-        document.getElementById('themeIcon').innerText = next === 'light' ? '🌙' : '☀️';
-        localStorage.setItem('theme', next);
-    }
-
-    // טעינת הגדרת המשתמש השמורה
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-    document.getElementById('themeIcon').innerText = savedTheme === 'light' ? '🌙' : '☀️';
-
-    // --- לוגיקת משחק ---
-    const vocabulary = [
-        { en: "as well as", he: "וגם / בנוסף", cat: "Home" }, { en: "grow", he: "לגדול / לצמוח", cat: "Animals" },
-        { en: "however", he: "למרות זאת", cat: "General" }, { en: "save", he: "לחסוך / להציל", cat: "Animals" },
-        { en: "throw away", he: "לזרוק", cat: "Home" }, { en: "Earth", he: "כדור הארץ", cat: "Animals" },
-        { en: "happen", he: "לקרות", cat: "General" }, { en: "simple", he: "פשוט", cat: "General" },
-        { en: "trash", he: "זבל", cat: "Home" }, { en: "refrigerator", he: "מקרר", cat: "Home" },
-        { en: "especially", he: "במיוחד", cat: "Adverbs" }, { en: "exactly", he: "בדיוק", cat: "Adverbs" },
-        { en: "immediately", he: "מיד", cat: "Adverbs" }, { en: "probably", he: "כנראה", cat: "Adverbs" },
-        { en: "suitcase", he: "מזוודה", cat: "Home" }, { en: "vacation", he: "חופשה", cat: "Home" }
-    ];
-
-    let state = {
-        pool: [], current: 0, lives: 3, 
-        sessionCorrect: 0, sessionTotal: 0,
-        stats: JSON.parse(localStorage.getItem('eng_pro_stats')) || { sessions: 0, words: {} }
+    const content = {
+        english: [
+            // רשימה 1
+            {q:"as well as", a:"וגם / בנוסף", type:"multiple"},
+            {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
+            {q:"however", a:"למרות זאת", type:"multiple"},
+            {q:"save", a:"לחסוך / להציל", type:"spell", en:"save"},
+            {q:"throw away", a:"לזרוק", type:"spell", en:"throw away"},
+            {q:"Earth", a:"כדור הארץ", type:"spell", en:"Earth"},
+            {q:"happen", a:"לקרות", type:"multiple"},
+            {q:"not too", a:"לא יותר מדי", type:"multiple"},
+            {q:"simple", a:"פשוט", type:"spell", en:"simple"},
+            {q:"trash", a:"זבל", type:"multiple"},
+            {q:"enough", a:"מספיק", type:"spell", en:"enough"},
+            {q:"hill", a:"גבעה", type:"multiple"},
+            {q:"refrigerator", a:"מקרר", type:"spell", en:"refrigerator"},
+            {q:"the future", a:"העתיד", type:"multiple"},
+            {q:"waste", a:"בזבוז", type:"spell", en:"waste"},
+            // רשימה 2
+            {q:"across", a:"מעבר / מצד לצד", type:"multiple"},
+            {q:"high", a:"גבוה", type:"spell", en:"high"},
+            {q:"photo", a:"תמונה / תצלום", type:"spell", en:"photo"},
+            {q:"suitcase", a:"מזוודה", type:"spell", en:"suitcase"},
+            {q:"without", a:"בלי", type:"multiple"},
+            {q:"agree", a:"להסכים", type:"multiple"},
+            {q:"narrow", a:"צר", type:"spell", en:"narrow"},
+            {q:"slow", a:"איטי", type:"spell", en:"slow"},
+            {q:"toothbrush", a:"מברשת שיניים", type:"spell", en:"toothbrush"},
+            {q:"around", a:"מסביב", type:"multiple"},
+            {q:"part", a:"חלק", type:"multiple"},
+            {q:"stairs", a:"מדרגות", type:"spell", en:"stairs"},
+            {q:"way", a:"דרך", type:"multiple"},
+            // Adverbs
+            {q:"especially", a:"במיוחד", type:"multiple"},
+            {q:"exactly", a:"בדיוק", type:"spell", en:"exactly"},
+            {q:"fairly", a:"למדי / די", type:"multiple"},
+            {q:"immediately", a:"מיד", type:"spell", en:"immediately"},
+            {q:"probably", a:"כנראה", type:"multiple"},
+            // Saving Animals
+            {q:"asleep", a:"ישן / נרדם", type:"multiple"},
+            {q:"come along", a:"לבוא / להצטרף", type:"multiple"},
+            {q:"glasses", a:"משקפיים", type:"spell", en:"glasses"},
+            {q:"hang", a:"לתלות", type:"multiple"},
+            {q:"must", a:"חייב", type:"multiple"},
+            {q:"of course", a:"כמובן", type:"multiple"},
+            {q:"somebody", a:"מישהו", type:"multiple"},
+            {q:"steal", a:"לגנוב", type:"spell", en:"steal"},
+            {q:"strange", a:"מוזר", type:"spell", en:"strange"},
+            {q:"vacation", a:"חופשה", type:"multiple"},
+            // רשימה אחרונה
+            {q:"bright", a:"בוהק", type:"spell", en:"bright"},
+            {q:"enjoy yourself", a:"להנות", type:"multiple"},
+            {q:"Guess what!", a:"נחשו מה!", type:"multiple"},
+            {q:"lovely", a:"יפה / מקסים", type:"multiple"},
+            {q:"suit", a:"חליפה", type:"spell", en:"suit"},
+            {q:"cover", a:"לכסות", type:"multiple"},
+            {q:"exciting", a:"מרגש", type:"multiple"},
+            {q:"hole", a:"חור / בור", type:"spell", en:"hole"},
+            {q:"office", a:"משרד", type:"spell", en:"office"},
+            {q:"war", a:"מלחמה", type:"multiple"},
+            {q:"deep", a:"עמוק", type:"spell", en:"deep"},
+            {q:"follow", a:"לעקוב אחרי", type:"spell", en:"follow"},
+            {q:"hope", a:"לקוות", type:"multiple"},
+            {q:"result", a:"תוצאה", type:"spell", en:"result"}
+        ],
+        bible: [
+            {q:"מי חטא בחרם ביריחו?", a:"עכן בן כרמי", type:"multiple", dist:["יהושע","כלב","פנחס"]},
+            {q:"באיזו עיר הפסידו ישראל בגלל החטא?", a:"העי", type:"multiple", dist:["ירושלים","בית אל","חברון"]},
+            {q:"מה עשה יהושע בהר עיבל?", a:"בנה מזבח וכתב את התורה", type:"multiple"},
+            {q:"איך הגבעונים הטעו את ישראל?", a:"באו עם לחם יבש ונעליים קרועות", type:"multiple"},
+            {q:"מה קרה לשמש בגבעון?", a:"היא עמדה מלכת (דום)", type:"multiple"},
+            {q:"מה ה' הפיל מהשמיים על האויבים?", a:"אבני ברד גדולות", type:"multiple"}
+        ]
     };
 
-    function initCategories() {
-        const cats = ['All', ...new Set(vocabulary.map(v => v.cat))];
-        const container = document.getElementById('catList');
-        container.innerHTML = "";
-        cats.forEach(c => {
-            container.innerHTML += `<button class="cat-btn" onclick="startGame('${c}')"><b>${c} Practice</b> <span>➔</span></button>`;
+    let state = { subject:'', pool:[], idx:0, lives:3 };
+
+    function startApp(s) {
+        state.subject = s; state.pool = [...content[s]].sort(()=>Math.random()-0.5);
+        state.idx = 0; state.lives = 3;
+        showScreen('gameScreen'); nextRound();
+    }
+
+    function nextRound() {
+        if(state.lives<=0 || state.idx >= state.pool.length) return end();
+        resetUI();
+        const item = state.pool[state.idx];
+        document.getElementById('targetWord').innerText = (item.type==='spell' && state.subject==='english') ? item.a : item.q;
+        if(item.type==='spell') {
+            document.getElementById('spellArea').style.display = 'block';
+            document.getElementById('optionsArea').style.display = 'none';
+        } else {
+            renderOptions(item);
+        }
+    }
+
+    function renderOptions(item) {
+        const area = document.getElementById('optionsArea');
+        area.style.display = 'grid';
+        let opts = [item.a, ...item.dist || []];
+        while(opts.length < 4) {
+            let r = content[state.subject][Math.floor(Math.random()*content[state.subject].length)].a;
+            if(!opts.includes(r)) opts.push(r);
+        }
+        opts.sort(()=>Math.random()-0.5).forEach(o => {
+            const b = document.createElement('button'); b.className = 'btn btn-outline';
+            b.innerText = o; b.onclick = () => check(o === item.a);
+            area.appendChild(b);
         });
     }
 
-    function startGame(cat) {
-        state.pool = cat === 'All' ? [...vocabulary] : vocabulary.filter(v => v.cat === cat);
-        state.pool.sort(() => Math.random() - 0.5);
-        state.current = 0; state.lives = 3; state.sessionCorrect = 0; state.sessionTotal = 0;
-        showScreen('gameScreen');
-        nextRound();
+    function check(isCorrect) {
+        const feedback = document.getElementById('feedback');
+        const item = state.pool[state.idx];
+        if(isCorrect) {
+            confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+            feedback.innerText = "נכון מאוד! ✨"; feedback.style.color = "var(--success)";
+        } else {
+            state.lives--;
+            feedback.innerText = "טעות. התשובה: " + (item.en || item.a);
+            feedback.style.color = "var(--error)";
+        }
+        state.idx++; updateUI();
+        document.getElementById('nextBtn').style.display = 'block';
+        document.getElementById('optionsArea').style.pointerEvents = 'none';
+        document.getElementById('spellArea').style.display = 'none';
+    }
+
+    function checkSpelling() {
+        const val = document.getElementById('spellInput').value.trim().toLowerCase();
+        check(val === state.pool[state.idx].en.toLowerCase());
+    }
+
+    function updateUI() {
+        document.getElementById('lives').innerText = "❤️".repeat(Math.max(0,state.lives));
+        document.getElementById('progressFill').style.width = (state.idx/state.pool.length)*100 + "%";
+    }
+
+    function resetUI() {
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('optionsArea').innerHTML = '';
+        document.getElementById('optionsArea').style.pointerEvents = 'all';
+        document.getElementById('spellInput').value = '';
     }
 
     function showScreen(id) {
@@ -183,123 +213,13 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function nextRound() {
-        if (state.lives <= 0 || state.current >= state.pool.length) return endSession();
-        const word = state.pool[state.current];
-        const isSpell = Math.random() > 0.5;
-        resetRoundUI();
-        document.getElementById('targetWord').innerText = isSpell ? word.he : word.en;
-        document.getElementById('qLabel').innerText = isSpell ? "HOW DO YOU SPELL?" : "CHOOSE TRANSLATION";
-        if (isSpell) {
-            document.getElementById('optionsArea').style.display = 'none';
-            document.getElementById('spellArea').style.display = 'block';
-            document.getElementById('spellInput').focus();
-        } else {
-            document.getElementById('optionsArea').style.display = 'grid';
-            document.getElementById('spellArea').style.display = 'none';
-            renderOptions(word);
-        }
-        speakCurrent();
+    function end() { alert("הסתיים התרגול!"); goHome(); }
+    function goHome() { location.reload(); }
+    function toggleTheme() {
+        const t = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', t);
+        document.getElementById('themeIcon').innerText = t === 'light' ? '🌙' : '☀️';
     }
-
-    function renderOptions(correct) {
-        let opts = [correct.he];
-        while(opts.length < 4) {
-            let r = vocabulary[Math.floor(Math.random()*vocabulary.length)].he;
-            if(!opts.includes(r)) opts.push(r);
-        }
-        opts.sort(() => Math.random() - 0.5).forEach(o => {
-            const b = document.createElement('button');
-            b.className = 'btn btn-outline'; b.innerText = o;
-            b.onclick = () => handleAnswer(o === correct.he);
-            document.getElementById('optionsArea').appendChild(b);
-        });
-    }
-
-    function handleAnswer(correct) {
-        const word = state.pool[state.current];
-        if(!state.stats.words[word.en]) state.stats.words[word.en] = { correct: 0, wrong: 0, cat: word.cat };
-        if(correct) {
-            state.sessionCorrect++; state.stats.words[word.en].correct++;
-            confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
-            document.getElementById('feedback').innerText = "Excellent! ✨";
-            document.getElementById('feedback').style.color = "var(--success)";
-        } else {
-            state.lives--; state.stats.words[word.en].wrong++;
-            document.getElementById('gameScreen').classList.add('shake');
-            document.getElementById('feedback').innerText = "Correct: " + word.en;
-            document.getElementById('feedback').style.color = "var(--error)";
-        }
-        state.sessionTotal++; state.current++;
-        save();
-        document.getElementById('optionsArea').style.display = 'none';
-        document.getElementById('spellArea').style.display = 'none';
-        document.getElementById('nextBtn').style.display = 'block';
-        updateUI();
-    }
-
-    function checkSpelling() {
-        const input = document.getElementById('spellInput').value.trim().toLowerCase();
-        handleAnswer(input === state.pool[state.current].en.toLowerCase());
-    }
-
-    function speakCurrent() {
-        window.speechSynthesis.cancel();
-        const txt = state.pool[state.current].en;
-        const u = new SpeechSynthesisUtterance(txt);
-        u.lang = 'en-US'; u.rate = 0.7; window.speechSynthesis.speak(u);
-    }
-
-    function showHint() {
-        const word = state.pool[state.current].en;
-        document.getElementById('hintDisplay').innerText = "מתחיל ב: " + word.substring(0, 2) + "...";
-        document.getElementById('hintDisplay').style.display = 'block';
-    }
-
-    function showDashboard() {
-        showScreen('parentScreen');
-        const s = state.stats;
-        document.getElementById('totalSessions').innerText = s.sessions;
-        let totalC = 0, totalW = 0, struggleHTML = "";
-        Object.keys(s.words).forEach(w => {
-            const data = s.words[w];
-            totalC += data.correct; totalW += data.wrong;
-            if(data.wrong > 0) struggleHTML += `<div class="bad-word"><span>${w}</span> <b style="color:var(--error)">${data.wrong} טעויות</b></div>`;
-        });
-        const acc = (totalC + totalW) > 0 ? Math.round((totalC / (totalC + totalW)) * 100) : 0;
-        document.getElementById('avgAccuracy').innerText = acc + "%";
-        document.getElementById('struggleList').innerHTML = struggleHTML || "אין טעויות עדיין!";
-    }
-
-    function resetRoundUI() {
-        document.getElementById('nextBtn').style.display = 'none';
-        document.getElementById('feedback').innerText = '';
-        document.getElementById('optionsArea').innerHTML = '';
-        document.getElementById('gameScreen').classList.remove('shake');
-        document.getElementById('spellInput').value = '';
-        document.getElementById('hintDisplay').style.display = 'none';
-    }
-
-    function updateUI() {
-        document.getElementById('lives').innerText = "❤️".repeat(state.lives);
-        document.getElementById('progressFill').style.width = (state.current / state.pool.length) * 100 + "%";
-    }
-
-    function endSession() {
-        state.stats.sessions++; save();
-        alert("סבב תרגול הסתיים!");
-        location.reload();
-    }
-
-    function resetStats() {
-        if(confirm("למחוק הכל?")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    function save() { localStorage.setItem('eng_pro_stats', JSON.stringify(state.stats)); }
-    initCategories();
 </script>
 </body>
 </html>
