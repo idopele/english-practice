@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת התרגול של עידו</title>
+    <title>מערכת התרגול של עמנואל - Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6366f1; --success: #10b981; --error: #ef4444; --bg: #f8fafc; --text: #1e293b; --card-bg: #ffffff; --border: #e2e8f0; }
+        :root { --primary: #6366f1; --success: #10b981; --error: #ef4444; --bg: #f8fafc; --text: #1e293b; --card-bg: #ffffff; --border: #e2e8f0; --hint: #f59e0b; }
         [data-theme="dark"] { --bg: #0f172a; --text: #f1f5f9; --card-bg: #1e293b; --border: #475569; }
         * { box-sizing: border-box; font-family: 'Assistant', sans-serif; transition: 0.3s; }
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; margin: 0; padding: 10px; display: flex; justify-content: center; }
@@ -18,12 +18,15 @@
         .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; margin-bottom: 10px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); text-align: right; }
+        .btn-hint { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; font-size: 14px; padding: 8px; margin-bottom: 15px; width: auto; display: inline-block; }
         .subject-card { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; padding: 20px; border-radius: 24px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .subject-card.bible { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .main-word { font-size: 26px; font-weight: 800; margin: 20px 0; text-align: center; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        .main-word { font-size: 28px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 80px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         input#spellInput { width: 100%; padding: 15px; font-size: 20px; border: 3px solid var(--border); border-radius: 15px; text-align: center; margin-bottom: 10px; background: var(--card-bg); color: var(--text); outline: none; }
+        .score-box { font-size: 18px; font-weight: bold; color: var(--primary); background: #eef2ff; padding: 5px 15px; border-radius: 20px; }
         .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0; }
         #progressFill { height: 100%; background: var(--primary); width: 0%; }
+        .speaker-icon { cursor: pointer; font-size: 24px; margin-top: 5px; }
     </style>
 </head>
 <body data-theme="light">
@@ -32,130 +35,162 @@
     <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon">🌙</button>
 
     <div id="subjectScreen" class="screen active">
-        <h1 style="font-weight: 800;">היי! 👋</h1>
-        <p>חומר למבחן - 29.4.2026</p>
+        <h1 style="font-weight: 800;">היי עידו! 👋</h1>
+        <p>תרגול למבחני אפריל 2026</p>
         <div class="subject-card" onclick="startApp('english')">
-            <div><h2 style="margin:0;">English</h2><small>כל אוצר המילים מהדף</small></div>
+            <div><h2 style="margin:0;">English</h2><small>כולל הקראה ורמזים</small></div>
             <span>🇬🇧</span>
         </div>
         <div class="subject-card bible" onclick="startApp('bible')">
-            <div><h2 style="margin:0;">תנ"ך</h2><small>יהושע ז'-י'</small></div>
+            <div><h2 style="margin:0;">תנ"ך</h2><small>יהושע ז'-י' (מורחב)</small></div>
             <span>📜</span>
         </div>
     </div>
 
     <div id="gameScreen" class="screen">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button onclick="goHome()" style="background:none; border:none; cursor:pointer;">🏠</button>
-            <div id="lives">❤️❤️❤️</div>
+            <button onclick="goHome()" style="background:none; border:none; cursor:pointer; font-size: 20px;">🏠</button>
+            <div id="scoreCounter" class="score-box">0/0</div>
         </div>
         <div class="progress-bar"><div id="progressFill"></div></div>
+        
         <div id="targetWord" class="main-word">---</div>
+        <div style="text-align:center;"><button id="hintBtn" class="btn btn-hint" onclick="showHint()">צריך רמז? 💡</button></div>
+        
         <div id="optionsArea" style="display: grid; gap: 8px;"></div>
+        
         <div id="spellArea" style="display:none;">
-            <input type="text" id="spellInput" placeholder="כתוב באנגלית..." autocomplete="off">
+            <input type="text" id="spellInput" placeholder="הקלד באנגלית..." autocomplete="off">
             <button class="btn btn-primary" onclick="checkSpelling()">בדיקה</button>
         </div>
+
         <button id="nextBtn" class="btn btn-primary" style="display:none;" onclick="nextRound()">המשך ➔</button>
-        <div id="feedback" style="text-align:center; margin-top:15px; font-weight:800;"></div>
+        <div id="feedback" style="text-align:center; margin-top:15px; font-weight:800; font-size: 18px;"></div>
     </div>
 </div>
 
 <script>
     const content = {
         english: [
-            // רשימה 1
-            {q:"as well as", a:"וגם / בנוסף", type:"multiple"},
+            {q:"as well as", a:"וגם / בנוסף", type:"multiple", en:"as well as"},
             {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
-            {q:"however", a:"למרות זאת", type:"multiple"},
+            {q:"however", a:"למרות זאת", type:"multiple", en:"however"},
             {q:"save", a:"לחסוך / להציל", type:"spell", en:"save"},
             {q:"throw away", a:"לזרוק", type:"spell", en:"throw away"},
             {q:"Earth", a:"כדור הארץ", type:"spell", en:"Earth"},
-            {q:"happen", a:"לקרות", type:"multiple"},
-            {q:"not too", a:"לא יותר מדי", type:"multiple"},
+            {q:"happen", a:"לקרות", type:"multiple", en:"happen"},
+            {q:"not too", a:"לא יותר מדי", type:"multiple", en:"not too"},
             {q:"simple", a:"פשוט", type:"spell", en:"simple"},
-            {q:"trash", a:"זבל", type:"multiple"},
+            {q:"trash", a:"זבל", type:"multiple", en:"trash"},
             {q:"enough", a:"מספיק", type:"spell", en:"enough"},
-            {q:"hill", a:"גבעה", type:"multiple"},
+            {q:"hill", a:"גבעה", type:"multiple", en:"hill"},
             {q:"refrigerator", a:"מקרר", type:"spell", en:"refrigerator"},
-            {q:"the future", a:"העתיד", type:"multiple"},
-            {q:"waste", a:"בזבוז", type:"spell", en:"waste"},
-            // רשימה 2
-            {q:"across", a:"מעבר / מצד לצד", type:"multiple"},
+            {q:"the future", a:"העתיד", type:"multiple", en:"the future"},
+            {q:"waste", a:"בזבוז / לבזבז", type:"spell", en:"waste"},
+            {q:"across", a:"מעבר ל-", type:"multiple", en:"across"},
             {q:"high", a:"גבוה", type:"spell", en:"high"},
-            {q:"photo", a:"תמונה / תצלום", type:"spell", en:"photo"},
+            {q:"photo", a:"תמונה", type:"spell", en:"photo"},
             {q:"suitcase", a:"מזוודה", type:"spell", en:"suitcase"},
-            {q:"without", a:"בלי", type:"multiple"},
-            {q:"agree", a:"להסכים", type:"multiple"},
+            {q:"without", a:"בלי", type:"multiple", en:"without"},
+            {q:"agree", a:"להסכים", type:"multiple", en:"agree"},
             {q:"narrow", a:"צר", type:"spell", en:"narrow"},
             {q:"slow", a:"איטי", type:"spell", en:"slow"},
             {q:"toothbrush", a:"מברשת שיניים", type:"spell", en:"toothbrush"},
-            {q:"around", a:"מסביב", type:"multiple"},
-            {q:"part", a:"חלק", type:"multiple"},
+            {q:"around", a:"מסביב", type:"multiple", en:"around"},
+            {q:"part", a:"חלק", type:"multiple", en:"part"},
             {q:"stairs", a:"מדרגות", type:"spell", en:"stairs"},
-            {q:"way", a:"דרך", type:"multiple"},
-            // Adverbs
-            {q:"especially", a:"במיוחד", type:"multiple"},
+            {q:"way", a:"דרך", type:"multiple", en:"way"},
+            {q:"especially", a:"במיוחד", type:"multiple", en:"especially"},
             {q:"exactly", a:"בדיוק", type:"spell", en:"exactly"},
-            {q:"fairly", a:"למדי / די", type:"multiple"},
+            {q:"fairly", a:"למדי / די", type:"multiple", en:"fairly"},
             {q:"immediately", a:"מיד", type:"spell", en:"immediately"},
-            {q:"probably", a:"כנראה", type:"multiple"},
-            // Saving Animals
-            {q:"asleep", a:"ישן / נרדם", type:"multiple"},
-            {q:"come along", a:"לבוא / להצטרף", type:"multiple"},
+            {q:"probably", a:"כנראה", type:"multiple", en:"probably"},
+            {q:"asleep", a:"ישן", type:"multiple", en:"asleep"},
+            {q:"come along", a:"להצטרף", type:"multiple", en:"come along"},
             {q:"glasses", a:"משקפיים", type:"spell", en:"glasses"},
-            {q:"hang", a:"לתלות", type:"multiple"},
-            {q:"must", a:"חייב", type:"multiple"},
-            {q:"of course", a:"כמובן", type:"multiple"},
-            {q:"somebody", a:"מישהו", type:"multiple"},
+            {q:"hang", a:"לתלות", type:"multiple", en:"hang"},
+            {q:"must", a:"חייב", type:"multiple", en:"must"},
+            {q:"of course", a:"כמובן", type:"multiple", en:"of course"},
+            {q:"somebody", a:"מישהו", type:"multiple", en:"somebody"},
             {q:"steal", a:"לגנוב", type:"spell", en:"steal"},
             {q:"strange", a:"מוזר", type:"spell", en:"strange"},
-            {q:"vacation", a:"חופשה", type:"multiple"},
-            // רשימה אחרונה
+            {q:"vacation", a:"חופשה", type:"multiple", en:"vacation"},
             {q:"bright", a:"בוהק", type:"spell", en:"bright"},
-            {q:"enjoy yourself", a:"להנות", type:"multiple"},
-            {q:"Guess what!", a:"נחשו מה!", type:"multiple"},
-            {q:"lovely", a:"יפה / מקסים", type:"multiple"},
+            {q:"enjoy yourself", a:"תיהנה", type:"multiple", en:"enjoy yourself"},
+            {q:"Guess what!", a:"נחשו מה!", type:"multiple", en:"Guess what"},
+            {q:"lovely", a:"מקסים", type:"multiple", en:"lovely"},
             {q:"suit", a:"חליפה", type:"spell", en:"suit"},
-            {q:"cover", a:"לכסות", type:"multiple"},
-            {q:"exciting", a:"מרגש", type:"multiple"},
-            {q:"hole", a:"חור / בור", type:"spell", en:"hole"},
+            {q:"cover", a:"לכסות", type:"multiple", en:"cover"},
+            {q:"exciting", a:"מרגש", type:"multiple", en:"exciting"},
+            {q:"hole", a:"חור", type:"spell", en:"hole"},
             {q:"office", a:"משרד", type:"spell", en:"office"},
-            {q:"war", a:"מלחמה", type:"multiple"},
+            {q:"war", a:"מלחמה", type:"multiple", en:"war"},
             {q:"deep", a:"עמוק", type:"spell", en:"deep"},
-            {q:"follow", a:"לעקוב אחרי", type:"spell", en:"follow"},
-            {q:"hope", a:"לקוות", type:"multiple"},
+            {q:"follow", a:"לעקוב", type:"spell", en:"follow"},
+            {q:"hope", a:"לקוות", type:"multiple", en:"hope"},
             {q:"result", a:"תוצאה", type:"spell", en:"result"}
         ],
         bible: [
-            {q:"מי חטא בחרם ביריחו?", a:"עכן בן כרמי", type:"multiple", dist:["יהושע","כלב","פנחס"]},
-            {q:"באיזו עיר הפסידו ישראל בגלל החטא?", a:"העי", type:"multiple", dist:["ירושלים","בית אל","חברון"]},
-            {q:"מה עשה יהושע בהר עיבל?", a:"בנה מזבח וכתב את התורה", type:"multiple"},
-            {q:"איך הגבעונים הטעו את ישראל?", a:"באו עם לחם יבש ונעליים קרועות", type:"multiple"},
-            {q:"מה קרה לשמש בגבעון?", a:"היא עמדה מלכת (דום)", type:"multiple"},
-            {q:"מה ה' הפיל מהשמיים על האויבים?", a:"אבני ברד גדולות", type:"multiple"}
+            {q:"מי חטא בחרם של יריחו ולקח מהשלל?", a:"עכן בן כרמי", type:"multiple", dist:["יהושע","איל לייב","פנחס בן אלעזר"]},
+            {q:"מה קרה בקרב הראשון מול העי?", a:"ישראל נגפו ונסו לפני אנשי העי", type:"multiple", dist:["ישראל ניצחו מיד","העיר נשרפה","היה שלום"]},
+            {q:"איך יהושע בחר את עכן כחוטא?", a:"ע\"י הפלת גורלות (שבט, משפחה, בית, גבר)", type:"multiple", dist:["לפי עדות עדים","הוא הודה מעצמו","מלאך גילה לו"]},
+            {q:"מה היה העונש של עכן?", a:"סקילה ושריפת כל רכושו בעמק עכור", type:"multiple", dist:["גירוש מהמחנה","קנס כספי","מאסר"]},
+            {q:"בפרק ח', כמה אנשים שלח יהושע למארב בלילה?", a:"30,000 גיבורי חיל", type:"multiple", dist:["300 איש","5,000 איש","כל העם"]},
+            {q:"מה היה האות שנתן יהושע לאנשי המארב לתקוף?", a:"נטיית הכידון לכיוון העיר", type:"multiple", dist:["תקיעת שופר","צעקה גדולה","הדלקת משואה"]},
+            {q:"מי היו הגבעונים?", a:"חיווי היושב בערים גבעון, כפירה, בארות וקרית יערים", type:"multiple", dist:["פלשתים","מלכי הצפון","מצרים"]},
+            {q:"מדוע יהושע כרת ברית עם הגבעונים?", a:"כי הם רימו אותו וחשב שהם באו מארץ רחוקה", type:"multiple", dist:["כי הוא פחד מהם","כי ה' ציווה עליו","כי הם עזרו לו בקרב"]},
+            {q:"מה היה גזר הדין של הגבעונים לאחר שהתגלתה התרמית?", a:"יהיו חוטבי עצים ושואבי מים לעדה ולמזבח", type:"multiple", dist:["השמדה מוחלטת","גירוש לירדן","מיסוי כבד"]},
+            {q:"מי היה המלך שהנהיג את חמשת מלכי האמורי נגד גבעון?", a:"אדוני צדק מלך ירושלים", type:"multiple", dist:["הורם מלך תלמי","פראם מלך ירמות","יפיע מלך לכיש"]},
+            {q:"מה קרה לשמש ולירח בקרב בעמק איילון?", a:"וידום השמש וירח עמד עד יקם גוי אויביו", type:"multiple", dist:["היה ליקוי חמה","ירד חושך מוקדם","הם הפכו לאדומים"]},
+            {q:"איפה הסתתרו חמשת המלכים בזמן המנוסה?", a:"במערה במקדה", type:"multiple", dist:["בתוך העיר חברון","ביער","בבור מים"]}
         ]
     };
 
-    let state = { subject:'', pool:[], idx:0, lives:3 };
+    let state = { subject:'', pool:[], idx:0, correct:0 };
 
     function startApp(s) {
         state.subject = s; state.pool = [...content[s]].sort(()=>Math.random()-0.5);
-        state.idx = 0; state.lives = 3;
+        state.idx = 0; state.correct = 0;
         showScreen('gameScreen'); nextRound();
     }
 
+    function speak(text) {
+        if (!text) return;
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'en-US'; msg.rate = 0.9;
+        window.speechSynthesis.speak(msg);
+    }
+
+    function showHint() {
+        const item = state.pool[state.idx];
+        const en = item.en;
+        if (!en) return;
+        const hint = en[0] + "..." + en[en.length-1];
+        alert("רמז: המילה מתחילה ב-" + en[0] + " ומסתיימת ב-" + en[en.length-1] + " (" + en.length + " אותיות)");
+    }
+
     function nextRound() {
-        if(state.lives<=0 || state.idx >= state.pool.length) return end();
+        if(state.idx >= state.pool.length) return end();
         resetUI();
         const item = state.pool[state.idx];
-        document.getElementById('targetWord').innerText = (item.type==='spell' && state.subject==='english') ? item.a : item.q;
-        if(item.type==='spell') {
-            document.getElementById('spellArea').style.display = 'block';
-            document.getElementById('optionsArea').style.display = 'none';
+        
+        if (state.subject === 'english') {
+            document.getElementById('hintBtn').style.display = 'inline-block';
+            if (item.type === 'spell') {
+                document.getElementById('targetWord').innerHTML = item.a + '<div class="speaker-icon" onclick="speak(\''+item.en+'\')">🔊</div>';
+                document.getElementById('spellArea').style.display = 'block';
+                document.getElementById('optionsArea').style.display = 'none';
+            } else {
+                document.getElementById('targetWord').innerHTML = item.q + '<div class="speaker-icon" onclick="speak(\''+item.en+'\')">🔊</div>';
+                renderOptions(item);
+            }
+            speak(item.en);
         } else {
+            document.getElementById('hintBtn').style.display = 'none';
+            document.getElementById('targetWord').innerText = item.q;
             renderOptions(item);
         }
+        updateUI();
     }
 
     function renderOptions(item) {
@@ -177,17 +212,18 @@
         const feedback = document.getElementById('feedback');
         const item = state.pool[state.idx];
         if(isCorrect) {
+            state.correct++;
             confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
-            feedback.innerText = "נכון מאוד! ✨"; feedback.style.color = "var(--success)";
+            feedback.innerText = "מעולה עידו! ✨"; feedback.style.color = "var(--success)";
         } else {
-            state.lives--;
-            feedback.innerText = "טעות. התשובה: " + (item.en || item.a);
+            feedback.innerText = "טעות. התשובה הנכונה: " + (item.en || item.a);
             feedback.style.color = "var(--error)";
         }
-        state.idx++; updateUI();
+        state.idx++; 
         document.getElementById('nextBtn').style.display = 'block';
         document.getElementById('optionsArea').style.pointerEvents = 'none';
         document.getElementById('spellArea').style.display = 'none';
+        updateUI();
     }
 
     function checkSpelling() {
@@ -196,7 +232,7 @@
     }
 
     function updateUI() {
-        document.getElementById('lives').innerText = "❤️".repeat(Math.max(0,state.lives));
+        document.getElementById('scoreCounter').innerText = state.correct + "/" + state.idx;
         document.getElementById('progressFill').style.width = (state.idx/state.pool.length)*100 + "%";
     }
 
@@ -213,8 +249,13 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function end() { alert("הסתיים התרגול!"); goHome(); }
+    function end() { 
+        alert("סיימת! התוצאה שלך היא: " + state.correct + " מתוך " + state.pool.length); 
+        goHome(); 
+    }
+    
     function goHome() { location.reload(); }
+    
     function toggleTheme() {
         const t = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         document.body.setAttribute('data-theme', t);
