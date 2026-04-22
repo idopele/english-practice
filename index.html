@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת התרגול של עמנואל - Pro</title>
+    <title>מערכת התרגול של עמנואלי</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -18,15 +18,15 @@
         .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; margin-bottom: 10px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); text-align: right; }
-        .btn-hint { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; font-size: 14px; padding: 8px; margin-bottom: 15px; width: auto; display: inline-block; }
-        .subject-card { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; padding: 20px; border-radius: 24px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .btn-hint { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; font-size: 14px; padding: 8px; margin-bottom: 15px; width: auto; display: inline-block; border-radius: 10px; }
+        .subject-card { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; padding: 25px; border-radius: 24px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .subject-card.bible { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .main-word { font-size: 28px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 80px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .main-word { font-size: 26px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 90px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.2; }
         input#spellInput { width: 100%; padding: 15px; font-size: 20px; border: 3px solid var(--border); border-radius: 15px; text-align: center; margin-bottom: 10px; background: var(--card-bg); color: var(--text); outline: none; }
         .score-box { font-size: 18px; font-weight: bold; color: var(--primary); background: #eef2ff; padding: 5px 15px; border-radius: 20px; }
         .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0; }
-        #progressFill { height: 100%; background: var(--primary); width: 0%; }
-        .speaker-icon { cursor: pointer; font-size: 24px; margin-top: 5px; }
+        #progressFill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; margin-top: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body data-theme="light">
@@ -35,32 +35,32 @@
     <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon">🌙</button>
 
     <div id="subjectScreen" class="screen active">
-        <h1 style="font-weight: 800;">היי עמנואל! 👋</h1>
-        <p>תרגול למבחני אפריל 2026</p>
+        <h1 style="font-weight: 800;">היי עמנואלי! 👋</h1>
+        <p>מוכנים לאתגר? המבחן מתקרב!</p>
         <div class="subject-card" onclick="startApp('english')">
-            <div><h2 style="margin:0;">English</h2><small>כולל הקראה ורמזים</small></div>
+            <div><h2 style="margin:0;">English</h2><small>Vocab Master (Audio + Hints)</small></div>
             <span>🇬🇧</span>
         </div>
         <div class="subject-card bible" onclick="startApp('bible')">
-            <div><h2 style="margin:0;">תנ"ך</h2><small>יהושע ז'-י' (מורחב)</small></div>
+            <div><h2 style="margin:0;">תנ"ך</h2><small>יהושע ז'-י' (רמה גבוהה)</small></div>
             <span>📜</span>
         </div>
     </div>
 
     <div id="gameScreen" class="screen">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button onclick="goHome()" style="background:none; border:none; cursor:pointer; font-size: 20px;">🏠</button>
+            <button onclick="goHome()" style="background:none; border:none; cursor:pointer; font-size: 24px;">🏠</button>
             <div id="scoreCounter" class="score-box">0/0</div>
         </div>
         <div class="progress-bar"><div id="progressFill"></div></div>
         
         <div id="targetWord" class="main-word">---</div>
-        <div style="text-align:center;"><button id="hintBtn" class="btn btn-hint" onclick="showHint()">צריך רמז? 💡</button></div>
+        <div style="text-align:center;"><button id="hintBtn" class="btn btn-hint" onclick="showHint()">רמז? 💡</button></div>
         
-        <div id="optionsArea" style="display: grid; gap: 8px;"></div>
+        <div id="optionsArea" style="display: grid; gap: 10px;"></div>
         
         <div id="spellArea" style="display:none;">
-            <input type="text" id="spellInput" placeholder="הקלד באנגלית..." autocomplete="off">
+            <input type="text" id="spellInput" placeholder="הקלד תשובה..." autocomplete="off">
             <button class="btn btn-primary" onclick="checkSpelling()">בדיקה</button>
         </div>
 
@@ -99,7 +99,7 @@
             {q:"around", a:"מסביב", type:"multiple", en:"around"},
             {q:"part", a:"חלק", type:"multiple", en:"part"},
             {q:"stairs", a:"מדרגות", type:"spell", en:"stairs"},
-            {q:"way", a:"דרך", type:"multiple", en:"way"},
+            {q:"way", a:"דרך / אופן", type:"multiple", en:"way"},
             {q:"especially", a:"במיוחד", type:"multiple", en:"especially"},
             {q:"exactly", a:"בדיוק", type:"spell", en:"exactly"},
             {q:"fairly", a:"למדי / די", type:"multiple", en:"fairly"},
@@ -131,25 +131,24 @@
             {q:"result", a:"תוצאה", type:"spell", en:"result"}
         ],
         bible: [
-            {q:"מי חטא בחרם של יריחו ולקח מהשלל?", a:"עכן בן כרמי", type:"multiple", dist:["יהושע","איל לייב","פנחס בן אלעזר"]},
-            {q:"מה קרה בקרב הראשון מול העי?", a:"ישראל נגפו ונסו לפני אנשי העי", type:"multiple", dist:["ישראל ניצחו מיד","העיר נשרפה","היה שלום"]},
-            {q:"איך יהושע בחר את עכן כחוטא?", a:"ע\"י הפלת גורלות (שבט, משפחה, בית, גבר)", type:"multiple", dist:["לפי עדות עדים","הוא הודה מעצמו","מלאך גילה לו"]},
-            {q:"מה היה העונש של עכן?", a:"סקילה ושריפת כל רכושו בעמק עכור", type:"multiple", dist:["גירוש מהמחנה","קנס כספי","מאסר"]},
-            {q:"בפרק ח', כמה אנשים שלח יהושע למארב בלילה?", a:"30,000 גיבורי חיל", type:"multiple", dist:["300 איש","5,000 איש","כל העם"]},
-            {q:"מה היה האות שנתן יהושע לאנשי המארב לתקוף?", a:"נטיית הכידון לכיוון העיר", type:"multiple", dist:["תקיעת שופר","צעקה גדולה","הדלקת משואה"]},
-            {q:"מי היו הגבעונים?", a:"חיווי היושב בערים גבעון, כפירה, בארות וקרית יערים", type:"multiple", dist:["פלשתים","מלכי הצפון","מצרים"]},
-            {q:"מדוע יהושע כרת ברית עם הגבעונים?", a:"כי הם רימו אותו וחשב שהם באו מארץ רחוקה", type:"multiple", dist:["כי הוא פחד מהם","כי ה' ציווה עליו","כי הם עזרו לו בקרב"]},
-            {q:"מה היה גזר הדין של הגבעונים לאחר שהתגלתה התרמית?", a:"יהיו חוטבי עצים ושואבי מים לעדה ולמזבח", type:"multiple", dist:["השמדה מוחלטת","גירוש לירדן","מיסוי כבד"]},
-            {q:"מי היה המלך שהנהיג את חמשת מלכי האמורי נגד גבעון?", a:"אדוני צדק מלך ירושלים", type:"multiple", dist:["הורם מלך תלמי","פראם מלך ירמות","יפיע מלך לכיש"]},
-            {q:"מה קרה לשמש ולירח בקרב בעמק איילון?", a:"וידום השמש וירח עמד עד יקם גוי אויביו", type:"multiple", dist:["היה ליקוי חמה","ירד חושך מוקדם","הם הפכו לאדומים"]},
-            {q:"איפה הסתתרו חמשת המלכים בזמן המנוסה?", a:"במערה במקדה", type:"multiple", dist:["בתוך העיר חברון","ביער","בבור מים"]}
+            {q:"מה המקור המדויק לחטא עכן (מה הוא לקח)?", a:"אדרת שנער, 200 שקלים כסף ולשון זהב", type:"multiple", dist:["רק כסף וזהב","בגדים ישנים","כלי נשק מהעי"]},
+            {q:"כמה אנשים מתו בקרב הראשון מול העי?", a:"כ-36 איש", type:"multiple", dist:["100 איש","איש לא מת","אלפי אנשים"]},
+            {q:"מדוע נבחר דווקא עמק עכור למקום העונש?", a:"על שם ה'עכירה' שעכר עכן את ישראל", type:"multiple", dist:["כי הוא היה קרוב ליריחו","כי שם גרו הגבעונים","כי היה שם בור עמוק"]},
+            {q:"מה עשה יהושע למלך העי לאחר הניצחון?", a:"תלה אותו על עץ עד הערב", type:"multiple", dist:["שלח אותו לגלות","הפך אותו לעבד","נתן לו למלוך תחתיו"]},
+            {q:"היכן נערך טקס קריאת התורה והברכות?", a:"בין הר גריזים והר עיבל", type:"multiple", dist:["בירושלים","ביריחו","בעמק איילון"]},
+            {q:"אילו מלכים נוספים הצטרפו לאדוני-צדק נגד גבעון?", a:"הורם מלך חברון, פראם מלך ירמות, יפיע מלך לכיש ודביר מלך עגלון", type:"multiple", dist:["מלכי פלשתים","מלך מצרים ומלך אשור","רק מלך חברון"]},
+            {q:"מה עשה יהושע לחמשת המלכים במערה לפני שהרגם?", a:"ביקש מקציניו לדרוך על צוואריהם", type:"multiple", dist:["נתן להם לברוח","ציווה עליהם להתפלל","שם אותם בכלא"]},
+            {q:"למה גבעון הייתה עיר חשובה כל כך?", a:"כי הייתה עיר גדולה כאחת ערי המלוכה וכל אנשיה גיבורים", type:"multiple", dist:["כי היה בה הרבה זהב","כי היא הייתה קרובה לים","כי היו בה חומות גבוהות מיריחו"]},
+            {q:"מה קרה בפרק י' כשה' השליך אבני ברד?", a:"רבים מתו מהברד מאשר הרגו בני ישראל בחרב", type:"multiple", dist:["הברד הפסיק את המלחמה","הברד פגע רק בבני ישראל","המלכים נכנעו בגלל הברד"]},
+            {q:"כמה זמן עמדה השמש מלכת לפי הכתוב?", a:"כיום תמים", type:"multiple", dist:["שעה אחת","שלושה ימים","עד חצות הלילה"]}
         ]
     };
 
     let state = { subject:'', pool:[], idx:0, correct:0 };
 
     function startApp(s) {
-        state.subject = s; state.pool = [...content[s]].sort(()=>Math.random()-0.5);
+        state.subject = s; 
+        state.pool = [...content[s]].sort(()=>Math.random()-0.5);
         state.idx = 0; state.correct = 0;
         showScreen('gameScreen'); nextRound();
     }
@@ -157,16 +156,17 @@
     function speak(text) {
         if (!text) return;
         const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'en-US'; msg.rate = 0.9;
+        msg.lang = 'en-US'; msg.rate = 0.85;
         window.speechSynthesis.speak(msg);
     }
 
     function showHint() {
         const item = state.pool[state.idx];
-        const en = item.en;
-        if (!en) return;
-        const hint = en[0] + "..." + en[en.length-1];
-        alert("רמז: המילה מתחילה ב-" + en[0] + " ומסתיימת ב-" + en[en.length-1] + " (" + en.length + " אותיות)");
+        if (state.subject === 'english' && item.en) {
+            alert("רמז: מתחיל ב-'" + item.en[0] + "', נגמר ב-'" + item.en[item.en.length-1] + "' (" + item.en.length + " אותיות)");
+        } else {
+            alert("רמז: תחשוב על פרטי הסיפור בפרקים ז'-י'!");
+        }
     }
 
     function nextRound() {
@@ -175,18 +175,16 @@
         const item = state.pool[state.idx];
         
         if (state.subject === 'english') {
-            document.getElementById('hintBtn').style.display = 'inline-block';
             if (item.type === 'spell') {
-                document.getElementById('targetWord').innerHTML = item.a + '<div class="speaker-icon" onclick="speak(\''+item.en+'\')">🔊</div>';
+                document.getElementById('targetWord').innerHTML = item.a + '<button class="speaker-btn" onclick="speak(\''+item.en+'\')">🔊</button>';
                 document.getElementById('spellArea').style.display = 'block';
                 document.getElementById('optionsArea').style.display = 'none';
             } else {
-                document.getElementById('targetWord').innerHTML = item.q + '<div class="speaker-icon" onclick="speak(\''+item.en+'\')">🔊</div>';
+                document.getElementById('targetWord').innerHTML = item.q + '<button class="speaker-btn" onclick="speak(\''+item.en+'\')">🔊</button>';
                 renderOptions(item);
             }
             speak(item.en);
         } else {
-            document.getElementById('hintBtn').style.display = 'none';
             document.getElementById('targetWord').innerText = item.q;
             renderOptions(item);
         }
@@ -197,13 +195,19 @@
         const area = document.getElementById('optionsArea');
         area.style.display = 'grid';
         let opts = [item.a, ...item.dist || []];
+        
+        // הוספת מסיחים רנדומליים אם חסר
         while(opts.length < 4) {
             let r = content[state.subject][Math.floor(Math.random()*content[state.subject].length)].a;
             if(!opts.includes(r)) opts.push(r);
         }
+
+        // ערבוב התשובות עצמן
         opts.sort(()=>Math.random()-0.5).forEach(o => {
-            const b = document.createElement('button'); b.className = 'btn btn-outline';
-            b.innerText = o; b.onclick = () => check(o === item.a);
+            const b = document.createElement('button'); 
+            b.className = 'btn btn-outline';
+            b.innerText = o; 
+            b.onclick = () => check(o === item.a);
             area.appendChild(b);
         });
     }
@@ -213,10 +217,10 @@
         const item = state.pool[state.idx];
         if(isCorrect) {
             state.correct++;
-            confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
-            feedback.innerText = "מעולה עמנואלי (תות)! ✨"; feedback.style.color = "var(--success)";
+            confetti({ particleCount: 60, spread: 80, origin: { y: 0.6 } });
+            feedback.innerText = "כל הכבוד עמנואלי! ✨"; feedback.style.color = "var(--success)";
         } else {
-            feedback.innerText = "טעות. התשובה הנכונה: " + (item.en || item.a);
+            feedback.innerText = "טעות. התשובה: " + (item.en || item.a);
             feedback.style.color = "var(--error)";
         }
         state.idx++; 
@@ -250,7 +254,7 @@
     }
 
     function end() { 
-        alert("סיימת! התוצאה שלך היא: " + state.correct + " מתוך " + state.pool.length); 
+        alert("סיימת, עמנואלי! התוצאה הסופית: " + state.correct + " מתוך " + state.pool.length); 
         goHome(); 
     }
     
