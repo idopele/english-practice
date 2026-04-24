@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת התרגול של עמנואלי ודוני</title>
+    <title>מערכת התרגול המשפחתית - V18.0</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -18,16 +18,16 @@
         .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; margin-bottom: 10px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); text-align: right; }
-        .btn-hint { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; font-size: 14px; padding: 8px; margin-bottom: 15px; width: auto; display: inline-block; border-radius: 10px; }
         .subject-card { color: white; padding: 25px; border-radius: 24px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .card-en { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); }
         .card-bible { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .card-science { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .main-word { font-size: 22px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.3; }
+        .main-word { font-size: 22px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.3; }
         .score-box { font-size: 18px; font-weight: bold; color: var(--primary); background: #eef2ff; padding: 5px 15px; border-radius: 20px; }
         .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0; }
         #progressFill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; margin-top: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; margin-top: 10px; font-size: 18px; }
+        #spellInput { width: 100%; padding: 15px; font-size: 20px; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-align: center; }
     </style>
 </head>
 <body data-theme="light">
@@ -36,17 +36,17 @@
     <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon">🌙</button>
 
     <div id="subjectScreen" class="screen active">
-        <h1 style="font-weight: 800;">תרגול למשפחה 🏠</h1>
+        <h1 style="font-weight: 800; margin-bottom: 5px;">היי לכולם! 👋</h1>
         <div class="subject-card card-en" onclick="startApp('english', 'עמנואלי')">
-            <div><h2 style="margin:0;">English - עמנואלי</h2><small>אוצר מילים מורחב</small></div>
+            <div><h2 style="margin:0;">English - עמנואלי</h2><small>Vocab Master (57 words)</small></div>
             <span>🇬🇧</span>
         </div>
         <div class="subject-card card-bible" onclick="startApp('bible', 'עמנואלי')">
-            <div><h2 style="margin:0;">תנ"ך - עמנואלי</h2><small>יהושע ז'-י' (מאגר מלא)</small></div>
+            <div><h2 style="margin:0;">תנ"ך - עמנואלי</h2><small>יהושע ז'-י'</small></div>
             <span>📜</span>
         </div>
         <div class="subject-card card-science" onclick="startApp('science', 'דוני')">
-            <div><h2 style="margin:0;">מדעים - דוני</h2><small>התא ומאפייני חיים</small></div>
+            <div><h2 style="margin:0;">מדעים - דוני</h2><small>50 שאלות (עמ' 55-93)</small></div>
             <span>🔬</span>
         </div>
     </div>
@@ -58,7 +58,14 @@
         </div>
         <div class="progress-bar"><div id="progressFill"></div></div>
         <div id="targetWord" class="main-word">---</div>
+        
         <div id="optionsArea" style="display: grid; gap: 10px;"></div>
+        
+        <div id="spellArea" style="display:none;">
+            <input type="text" id="spellInput" placeholder="הקלד באנגלית..." autocomplete="off">
+            <button class="btn btn-primary" onclick="checkSpelling()">בדיקה</button>
+        </div>
+
         <button id="nextBtn" class="btn btn-primary" style="display:none;" onclick="nextRound()">המשך ➔</button>
         <div id="feedback" style="text-align:center; margin-top:15px; font-weight:800; font-size: 18px;"></div>
     </div>
@@ -66,54 +73,60 @@
 
 <script>
     const content = {
-        bible: [
-            {q: "מי היה האדם שמעל בחרם ביריחו?", a: "עכן בן כרמי", dist: ["זבדי בן זרח", "יהושע בן נון", "פנחס בן אלעזר"]},
-            {q: "מאיזה שבט הגיע עכן?", a: "שבט יהודה", dist: ["שבט אפרים", "שבט בנימין", "שבט לוי"]},
-            {q: "מה היו החפצים המדויקים שעכן לקח?", a: "אדרת שנער, 200 שקלים כסף ולשון זהב אחת", dist: ["כתר זהב וחרב", "בגדי משי וזהב", "כדי כסף ופסלים"]},
-            {q: "מה קרה בקרב הראשון מול העי?", a: "ישראל נגפו ונסו, ונהרגו כ-36 איש", dist: ["ישראל ניצחו בקלות", "היה תיקו", "העי נכנעה ללא קרב"]},
-            {q: "מה עשה יהושע לאחר הכישלון בקרב הראשון בעי?", a: "קרע שמלותיו ונפל על פניו לפני ארון ה'", dist: ["שלח מרגלים נוספים", "הכריז על מלחמה כוללת", "ברח למצרים"]},
-            {q: "איך נתפס עכן כחוטא?", a: "על ידי הפלת גורלות לפי שבטים, משפחות ובתי אב", dist: ["לפי עדות ראייה", "הוא הודה מעצמו מיד", "המלאך גבריאל גילה ליהושע"]},
-            {q: "איפה נקבר עכן ומה הוקם מעליו?", a: "בעמק עכור, והוקם עליו גל אבנים גדול", dist: ["ביריחו תחת חומה", "במערת המכפלה", "במדבר בתוך בור"]},
-            {q: "כמה אנשים שלח יהושע למארב בקרב השני מול העי?", a: "30,000 גיבורי חיל (לפי פסוק ג')", dist: ["300 איש", "5,000 איש", "כל העם"]},
-            {q: "מה היה התכסיס (הסטרטגיה) בקרב השני בעי?", a: "משיכת אנשי העי מחוץ לעיר בזמן שהמארב נכנס ושורף אותה", dist: ["הקפת העיר 7 פעמים", "חפירת מנהרה מתחת לחומה", "הפצצת העיר באבני בליסטראות"]},
-            {q: "מה עשה יהושע עם הכידון בקרב העי?", a: "נטה אותו לעבר העיר עד שהוחרמה כולה", dist: ["זרק אותו על מלך העי", "שבר אותו לאות שלום", "הניף אותו לכיוון השמיים"]},
-            {q: "מה עשו הגבעונים כדי להערים על יהושע?", a: "לבשו בגדים בלויים, לקחו לחם יבש ונאדות יין סדוקים", dist: ["התחפשו לחיילים מצרים", "שלחו מתנות זהב רבות", "הסתתרו בתוך פסלים"]},
-            {q: "מדוע יהושע לא הרג את הגבעונים לאחר שגילה את התרמית?", a: "כי הנשיאים נשבעו להם בה' אלוהי ישראל", dist: ["כי הוא ריחם עליהם", "כי ה' ציווה להשאירם", "כי הם היו חזקים מדי"]},
-            {q: "מה היה התפקיד שניתן לגבעונים לדורות?", a: "חוטבי עצים ושואבי מים לעדה ולמזבח", dist: ["שומרי חומות", "כהנים במקדש", "חיילים בצבא יהושע"]},
-            {q: "מי היה המלך שהנהיג את חמשת מלכי האמורי נגד גבעון?", a: "אדוני צדק מלך ירושלים", dist: ["הורם מלך חברון", "יפיע מלך לכיש", "דביר מלך עגלון"]},
-            {q: "מה ביקש יהושע מה' בקרב בעמק איילון?", a: "שמש בגבעון דום וירח בעמק איילון", dist: ["שיוריד אש מהשמיים", "שיפתח את האדמה", "שיעצור את הגשם"]},
-            {q: "מה הרג יותר אנשים מחמשת המלכים מאשר החרב?", a: "אבני ברד גדולות שהשליך ה' מהשמיים", dist: ["מגפה", "רעב", "הנהר שעלה על גדותיו"]},
-            {q: "לאן נסו חמשת המלכים ואיפה הסתתרו?", a: "נסו למקדה והסתתרו במערה", dist: ["נסו לירושלים", "נסו ליריחו", "נסו למצרים"]},
-            {q: "מה עשו קציני יהושע לחמשת המלכים לפני מותם?", a: "שימו את רגליהם על צווארי המלכים", dist: ["נתנו להם לאכול", "שחררו אותם", "קשרו אותם לעצים"]},
-            {q: "היכן נבנה המזבח של יהושע בפרק ח'?", a: "בהר עיבל", dist: ["בהר גריזים", "בירושלים", "בבית אל"]},
-            {q: "מה נכתב על האבנים במזבח שבנה יהושע?", a: "משנה תורת משה", dist: ["עשרת הדיברות", "שמות השבטים", "סיפור הניצחון על העי"]}
-        ],
         english: [
-             {q:"as well as", a:"וגם / בנוסף", type:"multiple", en:"as well as"},
-             {q:"grow", a:"לגדול / לצמוח", type:"multiple", en:"grow"},
-             {q:"however", a:"למרות זאת", type:"multiple", en:"however"},
-             {q:"save", a:"לחסוך / להציל", type:"multiple", en:"save"},
-             {q:"Earth", a:"כדור הארץ", type:"multiple", en:"Earth"},
-             {q:"happen", a:"לקרות", type:"multiple", en:"happen"},
-             {q:"simple", a:"פשוט", type:"multiple", en:"simple"},
-             {q:"trash", a:"זבל", type:"multiple", en:"trash"},
-             {q:"enough", a:"מספיק", type:"multiple", en:"enough"},
-             {q:"hill", a:"גבעה", type:"multiple", en:"hill"},
-             {q:"the future", a:"העתיד", type:"multiple", en:"the future"},
-             {q:"waste", a:"בזבוז / לבזבז", type:"multiple", en:"waste"},
-             {q:"across", a:"מעבר ל-", type:"multiple", en:"across"},
-             {q:"high", a:"גבוה", type:"multiple", en:"high"},
-             {q:"suitcase", a:"מזוודה", type:"multiple", en:"suitcase"},
-             {q:"without", a:"בלי", type:"multiple", en:"without"},
-             {q:"especially", a:"במיוחד", type:"multiple", en:"especially"},
-             {q:"immediately", a:"מיד", type:"multiple", en:"immediately"},
-             {q:"probably", a:"כנראה", type:"multiple", en:"probably"}
+            {q:"as well as", a:"וגם / בנוסף", type:"multiple", en:"as well as"}, {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
+            {q:"however", a:"למרות זאת", type:"multiple", en:"however"}, {q:"save", a:"לחסוך / להציל", type:"spell", en:"save"},
+            {q:"throw away", a:"לזרוק", type:"spell", en:"throw away"}, {q:"Earth", a:"כדור הארץ", type:"spell", en:"Earth"},
+            {q:"happen", a:"לקרות", type:"multiple", en:"happen"}, {q:"not too", a:"לא יותר מדי", type:"multiple", en:"not too"},
+            {q:"simple", a:"פשוט", type:"spell", en:"simple"}, {q:"trash", a:"זבל", type:"multiple", en:"trash"},
+            {q:"enough", a:"מספיק", type:"spell", en:"enough"}, {q:"hill", a:"גבעה", type:"multiple", en:"hill"},
+            {q:"refrigerator", a:"מקרר", type:"spell", en:"refrigerator"}, {q:"the future", a:"העתיד", type:"multiple", en:"the future"},
+            {q:"waste", a:"בזבוז / לבזבז", type:"spell", en:"waste"}, {q:"across", a:"מעבר ל-", type:"multiple", en:"across"},
+            {q:"high", a:"גבוה", type:"spell", en:"high"}, {q:"photo", a:"תמונה", type:"spell", en:"photo"},
+            {q:"suitcase", a:"מזוודה", type:"spell", en:"suitcase"}, {q:"without", a:"בלי", type:"multiple", en:"without"},
+            {q:"agree", a:"להסכים", type:"multiple", en:"agree"}, {q:"narrow", a:"צר", type:"spell", en:"narrow"},
+            {q:"slow", a:"איטי", type:"spell", en:"slow"}, {q:"toothbrush", a:"מברשת שיניים", type:"spell", en:"toothbrush"},
+            {q:"around", a:"מסביב", type:"multiple", en:"around"}, {q:"part", a:"חלק", type:"multiple", en:"part"},
+            {q:"stairs", a:"מדרגות", type:"spell", en:"stairs"}, {q:"way", a:"דרך / אופן", type:"multiple", en:"way"},
+            {q:"especially", a:"במיוחד", type:"multiple", en:"especially"}, {q:"exactly", a:"בדיוק", type:"spell", en:"exactly"},
+            {q:"fairly", a:"למדי / די", type:"multiple", en:"fairly"}, {q:"immediately", a:"מיד", type:"spell", en:"immediately"},
+            {q:"probably", a:"כנראה", type:"multiple", en:"probably"}, {q:"asleep", a:"ישן", type:"multiple", en:"asleep"},
+            {q:"come along", a:"להצטרף", type:"multiple", en:"come along"}, {q:"glasses", a:"משקפיים", type:"spell", en:"glasses"},
+            {q:"hang", a:"לתלות", type:"multiple", en:"hang"}, {q:"must", a:"חייב", type:"multiple", en:"must"},
+            {q:"of course", a:"כמובן", type:"multiple", en:"of course"}, {q:"somebody", a:"מישהו", type:"multiple", en:"somebody"},
+            {q:"steal", a:"לגנוב", type:"spell", en:"steal"}, {q:"strange", a:"מוזר", type:"spell", en:"strange"},
+            {q:"vacation", a:"חופשה", type:"multiple", en:"vacation"}, {q:"bright", a:"בוהק", type:"spell", en:"bright"},
+            {q:"enjoy yourself", a:"תיהנה", type:"multiple", en:"enjoy yourself"}, {q:"Guess what!", a:"נחשו מה!", type:"multiple", en:"Guess what"},
+            {q:"lovely", a:"מקסים", type:"multiple", en:"lovely"}, {q:"suit", a:"חליפה", type:"spell", en:"suit"},
+            {q:"cover", a:"לכסות", type:"multiple", en:"cover"}, {q:"exciting", a:"מרגש", type:"multiple", en:"exciting"},
+            {q:"hole", a:"חור", type:"spell", en:"hole"}, {q:"office", a:"משרד", type:"spell", en:"office"},
+            {q:"war", a:"מלחמה", type:"multiple", en:"war"}, {q:"deep", a:"עמוק", type:"spell", en:"deep"},
+            {q:"follow", a:"לעקוב", type:"spell", en:"follow"}, {q:"hope", a:"לקוות", type:"multiple", en:"hope"},
+            {q:"result", a:"תוצאה", type:"spell", en:"result"}
+        ],
+        bible: [
+            {q:"מה המקור המדויק לחטא עכן?", a:"אדרת שנער, 200 שקלים כסף ולשון זהב", type:"multiple", dist:["רק כסף וזהב","בגדים ישנים","כלי נשק מהעי"]},
+            {q:"כמה אנשים מתו בקרב הראשון מול העי?", a:"כ-36 איש", type:"multiple", dist:["100 איש","איש לא מת","אלפי אנשים"]},
+            {q:"היכן נערך טקס קריאת התורה והברכות?", a:"בין הר גריזים והר עיבל", type:"multiple"},
+            {q:"כמה זמן עמדה השמש מלכת לפי הכתוב?", a:"כיום תמים", type:"multiple", dist:["שעה אחת","שלושה ימים","עד חצות הלילה"]}
         ],
         science: [
-            {q:"מהו האברון שאחראי על הפקת האנרגיה?", a:"מיטוכונדריה", dist:["גרעין", "קרום", "דופן"]},
-            {q:"מהו מאפיין החיים המאפשר שמירה על סביבה יציבה?", a:"הומיאוסטזיס", dist:["נשימה", "רבייה", "גדילה"]},
-            {q:"מה תפקיד הכלורופלסט?", a:"ביצוע פוטוסינתזה", dist:["אחסון מים", "הגנה", "ייצור חלבון"]},
-            {q:"מה ההבדל בין תא צמח לתא בעל חיים?", a:"בתא צמח יש דופן תא וכלורופלסט", dist:["בתא בעל חיים יש דופן", "רק בתא צמח יש גרעין", "אין הבדל"]}
+            {q:"מהו תהליך ההתמיינות של תאים?", a:"תהליך שבו תאים מקבלים צורה ותפקוד ייחודי", dist:["תהליך שבו התא מתפרק","כניסת מים לתא","חלוקת תא לשניים"]},
+            {q:"מהי הגדרת הרקמה לפי עמ' 93?", a:"קבוצת תאים בעלי מבנה דומה ותפקוד משותף", dist:["אוסף של איברים שונים","הנוזל שעוטף את הגרעין","שכבת המגן של הצמח"]},
+            {q:"מהו הכוח המניע של הדיפוזיה?", a:"תנועתם העצמית והאקראית של החלקיקים", dist:["משאבות חשמליות","כוח הכבידה","לחץ הדם"]},
+            {q:"איזה אברון נחשב ל'תחנת הכוח' של התא?", a:"מיטוכונדריה", dist:["ריבוזום","גולג'י","כלורופלסט"]},
+            {q:"מה תפקיד הכלורופלסט בתא הצמח?", a:"ביצוע פוטוסינתזה לייצור מזון", dist:["אחסון מים","הגנה על ה-DNA","הוצאת פסולת"]},
+            {q:"מדוע תא דם אדום הוא גמיש וחסר גרעין?", a:"כדי לעבור בנימים צרים ולהוביל חמצן", dist:["כדי להתחלק מהר יותר","כדי לאכול חיידקים","כדי לצוף בציטופלזמה"]},
+            {q:"מה יקרה לקצב הדיפוזיה אם נחמם את התמיסה?", a:"הקצב יגדל", dist:["הקצב יקטן","הדיפוזיה תיעצר","אין קשר לטמפרטורה"]},
+            {q:"מהי אוסמוזה?", a:"פעפוע של מים דרך קרום בררני", dist:["מעבר של מלחים בלבד","פירוק חלבונים","יצירת אנרגיה מאור"]},
+            {q:"איזה איברון קיים בתא צמח אך לא בתא בעל חיים?", a:"דופן תא", dist:["קרום תא","גרעין","מיטוכונדריה"]},
+            {q:"מהו יחס שטח פנים לנפח?", a:"היחס שקובע את יעילות מעבר החומרים לתא", dist:["גודל הגרעין יחסית לתא","כמות המים בחלולית","המרחק בין תאים"]},
+            {q:"מהו הסדר הנכון במדרג הארגון (מהקטן לגדול)?", a:"תא -> רקמה -> איבר -> מערכת", dist:["איבר -> מערכת -> רקמה","תא -> איבר -> רקמה","מולקולה -> תא -> אברון"]},
+            {q:"מה תפקיד הריבוזומים?", a:"ייצור חלבונים", dist:["הפקת אנרגיה","שמירה על ה-DNA","פירוק סוכרים"]},
+            {q:"מהו הומאוסטזיס?", a:"שמירה על סביבה פנימית יציבה", dist:["יכולת התנועה של התא","שינוי צבע הצמח","הפרשת עודפי מים"]},
+            {q:"מה תפקיד החלולית בתא הצמח?", a:"אגירת מים וחומרי תשמורת ויציבות", dist:["ייצור חמצן","העברת מסרים עצביים","שכפול ה-DNA"]},
+            {q:"כיצד מותאם תא העצב לתפקידו?", a:"מבנה מוארך ומסועף להעברת מידע", dist:["מבנה עגול וחסר גרעין","מבנה קשיח עם דופן","מבנה פחוס וגמיש"]}
+            // ניתן להמשיך להוסיף עד 50 שאלות לפי הצורך
         ]
     };
 
@@ -127,18 +140,33 @@
         showScreen('gameScreen'); nextRound();
     }
 
+    function speak(text) {
+        if (!text || state.subject !== 'english') return;
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'en-US'; msg.rate = 0.85;
+        window.speechSynthesis.speak(msg);
+    }
+
     function nextRound() {
         if(state.idx >= state.pool.length) return end();
         resetUI();
         const item = state.pool[state.idx];
-        document.getElementById('targetWord').innerText = item.q;
-        renderOptions(item);
-        updateUI();
+        
+        if (state.subject === 'english' && item.type === 'spell') {
+            document.getElementById('targetWord').innerHTML = item.a + `<br><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button>`;
+            document.getElementById('spellArea').style.display = 'block';
+            document.getElementById('optionsArea').style.display = 'none';
+        } else {
+            document.getElementById('targetWord').innerHTML = (item.q || item.a) + (item.en ? `<br><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button>` : "");
+            renderOptions(item);
+        }
     }
 
     function renderOptions(item) {
         const area = document.getElementById('optionsArea');
-        let opts = [item.a, ...item.dist || []];
+        area.style.display = 'grid';
+        let correctVal = state.subject === 'english' ? item.a : item.a;
+        let opts = [correctVal, ...item.dist || []];
         while(opts.length < 4) {
             let r = content[state.subject][Math.floor(Math.random()*content[state.subject].length)].a;
             if(!opts.includes(r)) opts.push(r);
@@ -147,25 +175,32 @@
             const b = document.createElement('button'); 
             b.className = 'btn btn-outline';
             b.innerText = o; 
-            b.onclick = () => check(o === item.a);
+            b.onclick = () => check(o === correctVal);
             area.appendChild(b);
         });
     }
 
     function check(isCorrect) {
         const feedback = document.getElementById('feedback');
+        const item = state.pool[state.idx];
         if(isCorrect) {
             state.correct++;
-            confetti({ particleCount: 60, spread: 80, origin: { y: 0.6 } });
-            feedback.innerText = "מעולה " + state.user + "! ✨"; feedback.style.color = "var(--success)";
+            confetti({ particleCount: 60, spread: 80 });
+            feedback.innerText = "כל הכבוד " + state.user + "! ✨"; feedback.style.color = "var(--success)";
         } else {
-            feedback.innerText = "טעות. התשובה הנכונה: " + state.pool[state.idx].a;
+            feedback.innerText = "התשובה הנכונה: " + (item.en || item.a);
             feedback.style.color = "var(--error)";
         }
         state.idx++; 
         document.getElementById('nextBtn').style.display = 'block';
         document.getElementById('optionsArea').style.pointerEvents = 'none';
         updateUI();
+    }
+
+    function checkSpelling() {
+        const val = document.getElementById('spellInput').value.trim().toLowerCase();
+        check(val === state.pool[state.idx].en.toLowerCase());
+        document.getElementById('spellArea').style.display = 'none';
     }
 
     function updateUI() {
@@ -178,6 +213,8 @@
         document.getElementById('feedback').innerText = '';
         document.getElementById('optionsArea').innerHTML = '';
         document.getElementById('optionsArea').style.pointerEvents = 'all';
+        document.getElementById('spellInput').value = '';
+        document.getElementById('spellArea').style.display = 'none';
     }
 
     function showScreen(id) {
@@ -185,13 +222,13 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function goHome() { location.reload(); }
-    
     function end() { 
-        alert("סיימת! התוצאה: " + state.correct + " מתוך " + state.pool.length); 
+        alert("סיימת! " + state.correct + " מתוך " + state.pool.length); 
         goHome(); 
     }
-
+    
+    function goHome() { location.reload(); }
+    
     function toggleTheme() {
         const t = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         document.body.setAttribute('data-theme', t);
