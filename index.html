@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת הלמידה המשפחתית V22.0</title>
+    <title>מערכת הלמידה - V23.0</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -23,7 +23,7 @@
         .card-bible { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .card-science { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
         .card-report { background: #64748b; }
-        .main-word { font-size: 22px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.3; }
+        .main-word { font-size: 20px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.4; }
         .score-box { font-size: 18px; font-weight: bold; color: var(--primary); background: #eef2ff; padding: 5px 15px; border-radius: 20px; }
         .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 10px 0; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
@@ -39,7 +39,7 @@
     <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon">🌙</button>
 
     <div id="subjectScreen" class="screen active">
-        <h1 style="font-weight: 800; margin-bottom: 5px;">היי עידו! 👋</h1>
+        <h1 style="font-weight: 800; margin-bottom: 5px;">שלום דוני ועמנואל 👋</h1>
         <div class="subject-card card-en" onclick="startApp('english', 'עמנואלי')">
             <div><h2 style="margin:0;">English</h2><small>57 מילים - עמנואלי</small></div><span>🇬🇧</span>
         </div>
@@ -47,19 +47,21 @@
             <div><h2 style="margin:0;">תנ"ך</h2><small>יהושע ז'-י' - עמנואלי</small></div><span>📜</span>
         </div>
         <div class="subject-card card-science" onclick="showScienceMenu()">
-            <div><h2 style="margin:0;">מדעים</h2><small>3 שאלונים - דוני</small></div><span>🔬</span>
+            <div><h2 style="margin:0;">מדעים</h2><small>5 שאלונים מפורטים - דוני</small></div><span>🔬</span>
         </div>
         <div class="subject-card card-report" onclick="showReport()">
-            <div><h2 style="margin:0;">דוח הורה</h2><small>צפייה באירוס וביצועים</small></div><span>📊</span>
+            <div><h2 style="margin:0;">דוח הורה</h2><small>מעקב ואיפוס נתונים</small></div><span>📊</span>
         </div>
     </div>
 
     <div id="scienceMenuScreen" class="screen">
         <button onclick="goHome()" class="btn btn-outline" style="text-align:center;">➔ חזרה</button>
-        <h2 style="font-weight: 800;">בחר נושא במדעים:</h2>
-        <div class="btn btn-primary" onclick="startApp('sci_life', 'דוני')">מאפייני חיים וצורכי קיום (14-24)</div>
-        <div class="btn btn-primary" onclick="startApp('sci_org', 'דוני')">רמות ארגון בטבע (25-34)</div>
-        <div class="btn btn-primary" onclick="startApp('sci_cell', 'דוני')">התא: מבנה ותהליכים (55-92)</div>
+        <h3 style="font-weight: 800;">בחר תת-נושא (דוני):</h3>
+        <div class="btn btn-primary" onclick="startApp('sci_traits', 'דוני')">1. מאפייני חיים (עמ' 14-21)</div>
+        <div class="btn btn-primary" onclick="startApp('sci_needs', 'דוני')">2. צורכי קיום (עמ' 22-24)</div>
+        <div class="btn btn-primary" onclick="startApp('sci_org', 'דוני')">3. רמות ארגון (עמ' 25-34)</div>
+        <div class="btn btn-primary" onclick="startApp('sci_cell_structure', 'דוני')">4. מבנה התא ואברונים</div>
+        <div class="btn btn-primary" onclick="startApp('sci_cell_process', 'דוני')">5. תהליכים בתא ויחס שטח פנים</div>
     </div>
 
     <div id="gameScreen" class="screen">
@@ -80,7 +82,7 @@
 
     <div id="reportScreen" class="screen">
         <button onclick="goHome()" class="btn btn-outline" style="text-align:center;">➔ חזרה</button>
-        <h2 style="font-weight: 800;">מצב התקדמות הילדים</h2>
+        <h2 style="font-weight: 800;">פירוט ביצועים</h2>
         <div id="reportList"></div>
     </div>
 </div>
@@ -119,56 +121,69 @@
             {q:"result", a:"תוצאה", type:"spell", en:"result"}
         ],
         bible: [
-            {q:"מה המקור המדויק לחטא עכן?", a:"אדרת שנער, 200 שקלים כסף ולשון זהב", dist:["בגדים יפים בלבד","זהב וכסף בלבד","נשק שלל"]},
-            {q:"כמה אנשים מתו בקרב הראשון מול העי?", a:"כ-36 איש", dist:["100 איש","איש לא מת","3000 איש"]},
-            {q:"מי אמר למי: 'חטא ישראל וגם עברו את בריתי'?", a:"ה' ליהושע", dist:["יהושע לעכן","העם ליהושע","ה' לעכן"]},
-            {q:"כיצד נתפס עכן בחטאו?", a:"על ידי הפלת גורל", dist:["יהושע ראה אותו","המרגלים דיווחו","אשתו סיפרה"]},
-            {q:"היכן נערך טקס קריאת התורה והברכות?", a:"בין הר גריזים והר עיבל", dist:["ביריחו","בירושלים","בגלגל"]},
-            {q:"מה עשו הגבעונים כדי לרמות את ישראל?", a:"התחפשו לאנשים שבאו מרחוק עם לחם יבש ונעליים קרועות", dist:["נלחמו בלילה","שלחו מרגלים","הביאו זהב"]},
-            {q:"מה היה גזר הדין של הגבעונים?", a:"חוטבי עצים ושואבי מים לעדה", dist:["גירוש","מוות","תשלום מס"]},
-            {q:"באיזה עמק עמדה השמש מלכת?", a:"עמק אילון", dist:["עמק יזרעאל","עמק האלה","עמק דותן"]},
-            {q:"כמה מלכים נלחמו נגד הגבעונים בברית?", a:"חמישה מלכים", dist:["שלושה מלכים","עשרה מלכים","מלך אחד"]},
-            {q:"מה קרה למלכים שברחו למערה במקדה?", a:"יהושע כלא אותם באבנים גדולות ואז הרג אותם", dist:["הם ברחו","הוא סלח להם","הם מתו מרעב"]},
-            {q:"מי עזר ליהושע בקרב נגד חמשת המלכים בעזרת אבנים גדולות מהשמים?", a:"ה'", dist:["המרגלים","הגבעונים","החיילים"]},
-            {q:"מדוע יהושע לא הרג את הגבעונים לאחר שגילה את התרמית?", a:"בגלל השבועה שנשבעו להם נשיאי העדה", dist:["כי הוא פחד מהם","כי הם היו חזקים","כי ה' אמר לו לסלוח"]}
+            {q:"מה גנב עכן מן החרם?", a:"אדרת שנער, 200 שקלים כסף ולשון זהב", dist:["זהב בלבד","בגדי מלחמה","רק כסף"]},
+            {q:"כמה אנשים מתו בתבוסה הראשונה בעי?", a:"כ-36 איש", dist:["100 איש","3000 איש","איש לא מת"]},
+            {q:"מי המלך שעמד בראש ברית חמשת המלכים?", a:"אדוני-צדק מלך ירושלים", dist:["מלך יריחו","מלך חברון","מלך העי"]},
+            {q:"מה עשו הגבעונים כדי להינצל?", a:"התחפשו לאנשים שבאו מארץ רחוקה", dist:["נלחמו בגבורה","ברחו למצרים","שילמו מס כבד"]},
+            {q:"מה היה העונש של הגבעונים?", a:"להיות חוטבי עצים ושואבי מים", dist:["עבדות בשדה","גירוש מהארץ","מוות"]},
+            {q:"מה קרה לשמש ולירח בעמק אילון?", a:"הם עמדו מלכת עד סיום הקרב", dist:["הם נעלמו","היה ליקוי חמה","הם הפכו לאדומים"]},
+            {q:"איפה הסתתרו חמשת המלכים?", a:"במערה במקדה", dist:["ביריחו","בתוך בור","במדבר"]},
+            {q:"מי אמר: 'שמש בגבעון דום וירח בעמק אילון'?", a:"יהושע", dist:["משה","ה'","אלעזר הכהן"]},
+            {q:"מדוע ישראל הפסידו בקרב הראשון בעי?", a:"בגלל שמעלו בחרם (חטא עכן)", dist:["כי היו מעט חיילים","כי העי הייתה חזקה","כי לא התפללו"]},
+            {q:"איך גילו שזה עכן שחטא?", a:"עלו בגורל: שבט, משפחה, בית, גבר", dist:["הוא הודה מיד","המרגלים ראו אותו","ה' אמר את שמו"]}
         ],
-        sci_life: [
-            {q:"מהם 7 מאפייני החיים שחייבים להתקיים בכל יצור?", a:"נשימה, הזנה, רבייה, הפרשה, גדילה, תגובה לגירויים, תנועה", dist:["תעופה, שינה, אכילה","דיבור, נשימה, גדילה","מים, מזון, חמצן"]},
-            {q:"האם יצור חי יכול להתקיים ללא רבייה?", a:"היצור עצמו כן, אך המין שלו ייכחד", dist:["לא, הוא ימות מיד","כן, רבייה היא לא מאפיין חיים","רק אם הוא חד-תאי"]},
-            {q:"מהו צורך קיום חיוני שאינו מאפיין חיים?", a:"מים", dist:["רבייה","הפרשה","תנועה"]},
-            {q:"מהי חשיבות התגובה לגירויים?", a:"הישרדות בסביבה משתנה", dist:["ייצור מזון","יכולת לגדול","הפרשת פסולת"]},
-            {q:"איזה צורך קיום דרוש לצמחים כדי לייצר מזון?", a:"אור שמש", dist:["בגדים","חמצן","בית"]},
-            {q:"מהו הומאוסטזיס?", a:"שמירה על סביבה פנימית יציבה למרות שינויים בחוץ", dist:["יכולת התנועה של התא","תהליך הרבייה","גדילת היצור"]},
-            {q:"איזה גז דרוש לרוב היצורים לתהליך הנשימה?", a:"חמצן", dist:["פחמן דו-חמצני","מימן","חנקן"]},
-            {q:"מהי הזנה הטרוטרופית?", a:"אכילת יצורים אחרים (כמו בעלי חיים)", dist:["ייצור עצמי של מזון","נשימה דרך העור","שתיית מים בלבד"]}
+        sci_traits: [
+            {q:"מהו חילוף חומרים (מטבוליזם)?", a:"קליטת חומרים, הפקת אנרגיה והפרשת פסולת", dist:["רק אכילה","רק נשימה","תנועה ממקום למקום"]},
+            {q:"מהי רבייה?", a:"העמדת צאצאים והמשכיות המין", dist:["גדילה בגובה","קליטת חמצן","שינה בלילה"]},
+            {q:"כיצד יצור מגיב לגירויים?", a:"קליטת מידע מהסביבה ותגובה אליו", dist:["ייצור צאצאים","הפרשת עודפי מים","אכילת מזון"]},
+            {q:"מהי גדילה והתפתחות?", a:"שינוי בלתי הפיך במידות הגוף ובמבנה", dist:["תנועה מהירה","נשימה תאית","אכילה מרובה"]},
+            {q:"האם תנועה חייבת להיות ממקום למקום?", a:"לא, יש תנועה פנימית (כמו זרימת דם או פתיחת פרח)", dist:["כן, תמיד","רק בבעלי חיים","רק בצמחים"]},
+            {q:"מה משותף לכל 7 מאפייני החיים?", a:"הם מתקיימים בכל יצור חי (ביוטי)", dist:["הם מתקיימים רק בחיות","הם דורשים אור שמש","הם מתקיימים רק בצמחים"]},
+            {q:"מהי הפרשה?", a:"סילוק חומרי פסולת ורעלים מהגוף", dist:["הזעת יתר","קליטת חמצן","בניית תאים"]},
+            {q:"כיצד צמחים מפיקים אנרגיה מחומרי מזון?", a:"בתהליך הנשימה התאית", dist:["בפוטוסינתזה בלבד","על ידי שתיית מים","הם לא צריכים אנרגיה"]}
+        ],
+        sci_needs: [
+            {q:"מהם צורכי הקיום הבסיסיים?", a:"מים, מזון, חמצן (לרוב), טמפרטורה, מרחב מחיה", dist:["בית, בגדים, כסף","טלפון, חברים, אוכל","חמצן בלבד"]},
+            {q:"מדוע יצורים זקוקים למזון?", a:"כדי להפיק אנרגיה לבניית הגוף ולפעולתו", dist:["כדי להיות שבעים","כדי לישון טוב","רק כדי לגדול"]},
+            {q:"מאיפה צמחים מקבלים את האנרגיה שלהם?", a:"מהשמש (אנרגיית אור שהופכת לכימית)", dist:["מהאדמה","מהמים","מהחמצן"]},
+            {q:"מדוע מים חיוניים לחיים?", a:"רוב התהליכים בתא מתרחשים בסביבה מימית", dist:["כדי שלא נהיה צמאים","כדי לשטוף את הגוף","רק לצמחים הם חיוניים"]},
+            {q:"מהו מרחב מחיה?", a:"מקום המספק ליצור את כל צורכי הקיום שלו", dist:["חדר פרטי","גינה גדולה","כדור הארץ"]},
+            {q:"איזו טמפרטורה דרושה לחיים?", a:"טווח המאפשר לתהליכים הכימיים בגוף לפעול", dist:["תמיד 25 מעלות","תמיד מעל 0","רק חום גבוה"]},
+            {q:"איזה גז נפלט מהצמחים כתוצר לוואי של פוטוסינתזה?", a:"חמצן", dist:["פחמן דו-חמצני","מימן","חנקן"]}
         ],
         sci_org: [
-            {q:"סדר את רמות הארגון מהקטן לגדול:", a:"תא -> רקמה -> איבר -> מערכת -> יצור", dist:["רקמה -> תא -> איבר","תא -> איבר -> רקמה","מולקולה -> תא -> אברון"]},
-            {q:"מהי הגדרת הרקמה?", a:"קבוצת תאים בעלי מבנה דומה ותפקיד משותף", dist:["נוזל התא","מעטפת האיברים","סוג של אברון"]},
-            {q:"איזו רמה כוללת מספר איברים הפועלים יחד?", a:"מערכת", dist:["רקמה","תא","אטום"]},
-            {q:"מהי רמת הארגון הכוללת את כל היצורים מאותו מין באזור מסוים?", a:"אוכלוסייה", dist:["קהילה","מערכת אקולוגית","רקמה"]},
-            {q:"מהי קהילה בטבע?", a:"מספר אוכלוסיות של מינים שונים החיים יחד", dist:["קבוצת תאים","מערכת של איברים","יצור חי אחד"]},
-            {q:"איזה איבר שייך למערכת ההובלה?", a:"לב", dist:["קיבה","ריאות","מוח"]},
-            {q:"מהי היחידה הבסיסית של כל היצורים החיים?", a:"התא", dist:["האטום","הרקמה","האיבר"]}
+            {q:"מהי רמת הארגון הפשוטה ביותר ביצור?", a:"התא", dist:["אטום","רקמה","איבר"]},
+            {q:"מה בונה את האיבר?", a:"מספר רקמות שונות הפועלות יחד", dist:["תא בודד","מערכת","יצור שלם"]},
+            {q:"מהי מערכת אקולוגית?", a:"יצורים חיים והסביבה הלא חיה (אביוטית) ביניהם", dist:["קבוצת אוכלוסיות","רק חיות","רק צמחים"]},
+            {q:"מהו יצור (אורגניזם)?", a:"כלל המערכות הפועלות יחד בגוף אחד", dist:["תא אחד","קבוצת רקמות","מערכת אחת"]},
+            {q:"מה נמצא בתוך התא ומבצע תפקיד ספציפי?", a:"אברון", dist:["רקמה","איבר","מולקולה"]},
+            {q:"מה ההבדל בין אוכלוסייה לקהילה?", a:"אוכלוסייה היא ממין אחד, קהילה היא ממינים רבים", dist:["אין הבדל","אוכלוסייה גדולה יותר","קהילה היא רק צמחים"]}
         ],
-        sci_cell: [
-            {q:"איזה אברון אחראי על הפקת אנרגיה (נשימה תאית)?", a:"מיטוכונדריה", dist:["ריבוזום","גרעין","כלורופלסט"]},
-            {q:"מה תפקיד הכלורופלסט בתא צמח?", a:"פוטוסינתזה (ייצור סוכר מאור)", dist:["הגנה","נשימה","אחסון מים"]},
-            {q:"מה תפקיד קרום התא?", a:"בררנות - פיקוח על חומרים נכנסים ויוצאים", dist:["יציבות קשיחה","ייצור חלבונים","שכפול DNA"]},
-            {q:"מה ההבדל העיקרי בין דופן לתא לקרום?", a:"הדופן קשיחה ומגינה, הקרום גמיש ובררני", dist:["הקרום רק בצמחים","הדופן רק בבעלי חיים","אין הבדל"]},
-            {q:"מהי החלולית?", a:"מאגר מים ומומסים הנותן יציבות לתא הצמח", dist:["מרכז הבקרה","תחנת כוח","מפעל חלבונים"]},
-            {q:"מה תפקיד הריבוזומים?", a:"בניית חלבונים", dist:["ייצור סוכר","הפקת אנרגיה","שמירה על DNA"]},
-            {q:"מדוע תאים חייבים להיות קטנים?", a:"כדי ששטח הפנים יהיה גדול מספיק ביחס לנפח למעבר חומרים מהיר", dist:["כדי שנוכל לראותם במיקרוסקופ","כדי שלא יתפוצצו","כי אין מקום בגוף"]},
-            {q:"מה יקרה לתא דם אדום שיוכנס למים מזוקקים (ריכוז מלח 0)?", a:"הוא יתנפח ויתפוצץ מאוסמוזה", dist:["הוא יתכווץ","לא יקרה כלום","הוא יתחיל לצמוח"]},
-            {q:"מהי דיפוזיה?", a:"מעבר חומר מריכוז גבוה לנמוך ללא השקעת אנרגיה", dist:["מעבר מים בלבד","ייצור אנרגיה","תנועת תאים"]},
-            {q:"איזה אברון מכיל את החומר התורשתי?", a:"גרעין התא", dist:["ציטופלזמה","חלולית","דופן"]}
+        sci_cell_structure: [
+            {q:"מהו גרעין התא?", a:"מרכז הבקרה המכיל את ה-DNA", dist:["תחנת כוח","שער הכניסה","בית חרושת לחלבונים"]},
+            {q:"מה תפקיד המיטוכונדריה?", a:"נשימה תאית ואספקת אנרגיה", dist:["ייצור סוכר","אחסון מים","הגנה"]},
+            {q:"איזה אברון משמש לייצור חלבונים?", a:"ריבוזום", dist:["חלולית","ציטופלזמה","כלורופלסט"]},
+            {q:"מה תפקיד קרום התא?", a:"מעטפת בררנית השומרת על הסביבה הפנימית", dist:["יציבות קשיחה","אחסון DNA","הפקת אנרגיה"]},
+            {q:"מהו הנוזל הממלא את רוב נפח התא?", a:"ציטופלזמה", dist:["חלולית","מים מזוקקים","דם"]},
+            {q:"אלו אברונים קיימים רק בתא צמח?", a:"דופן, כלורופלסט, חלולית גדולה", dist:["גרעין וקרום","מיטוכונדריה וציטופלזמה","ריבוזום ודופן"]},
+            {q:"מה תפקיד הדופן בתא הצמח?", a:"שמירה על יציבות והגנה מפני פגיעות חיצוניות", dist:["מעבר חומרים בררני","ביצוע פוטוסינתזה","ייצור חלבונים"]},
+            {q:"מהי החלולית?", a:"אברון המאחסן מים ומומסים ושומר על לחץ פנימי", dist:["מרכז האנרגיה","מחסן DNA","שער התא"]}
+        ],
+        sci_cell_process: [
+            {q:"מהי דיפוזיה?", a:"מעבר חומר מריכוז גבוה לנמוך עד להשוואת ריכוזים", dist:["מעבר מים בלבד","מעבר חומר בעזרת אנרגיה","יצירת חלבונים"]},
+            {q:"מהי אוסמוזה?", a:"מעבר מים דרך קרום בררני מריכוז מלחים נמוך לגבוה", dist:["נשימה תאית","ייצור אנרגיה","תנועת תאים"]},
+            {q:"מדוע חשוב יחס שטח פנים לנפח בתאים?", a:"שטח פנים גדול מאפשר מעבר מהיר של חומרים לנפח התא", dist:["כדי שהתא יהיה כבד","כדי שהתא יתפוס מקום","זה לא חשוב"]},
+            {q:"מה יקרה לתא צמח שיוכנס לתמיסה מלוחה מאוד?", a:"הוא יעבור פלסמוליזה (הקרום יתנתק מהדופן כי מים יצאו)", dist:["הוא יתפוצץ","הוא יגדל","לא יקרה כלום"]},
+            {q:"בתהליך הנשימה התאית, מה הופך לאנרגיה?", a:"גלוקוז (סוכר) וחמצן", dist:["מים ופחמן","אור שמש","חלבונים"]},
+            {q:"איפה בתא מתבצעת הפוטוסינתזה?", a:"בכלורופלסטים", dist:["בגרעין","במיטוכונדריה","בריבוזומים"]}
         ]
     };
 
     let state = { subject:'', pool:[], idx:0, correct:0, user:'' };
-    let stats = JSON.parse(localStorage.getItem('family_stats_v2')) || {
-        english: {total:0, correct:0}, bible: {total:0, correct:0},
-        sci_life: {total:0, correct:0}, sci_org: {total:0, correct:0}, sci_cell: {total:0, correct:0}
+    let stats = JSON.parse(localStorage.getItem('family_stats_v23')) || {
+        english: {t:0, c:0}, bible: {t:0, c:0},
+        sci_traits: {t:0, c:0}, sci_needs: {t:0, c:0}, sci_org: {t:0, c:0},
+        sci_cell_structure: {t:0, c:0}, sci_cell_process: {t:0, c:0}
     };
 
     function startApp(s, user) {
@@ -194,66 +209,51 @@
         }
     }
 
-    function speak(text) {
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'en-US'; window.speechSynthesis.speak(msg);
-    }
-
     function renderOptions(item) {
         const area = document.getElementById('optionsArea');
         area.style.display = 'grid';
         let opts = [item.a, ...item.dist].sort(()=>Math.random()-0.5);
         opts.forEach(o => {
-            const b = document.createElement('button'); 
-            b.className = 'btn btn-outline';
-            b.innerText = o; 
-            b.onclick = () => check(o === item.a);
+            const b = document.createElement('button'); b.className = 'btn btn-outline';
+            b.innerText = o; b.onclick = () => check(o === item.a);
             area.appendChild(b);
         });
     }
 
     function check(isCorrect) {
-        stats[state.subject].total++;
+        stats[state.subject].t++;
         if(isCorrect) {
-            state.correct++; stats[state.subject].correct++;
+            state.correct++; stats[state.subject].c++;
             confetti({ particleCount: 50, spread: 70 });
             document.getElementById('feedback').innerText = "מעולה! ✨";
         } else {
             document.getElementById('feedback').innerText = "לא נורא, התשובה: " + state.pool[state.idx].a;
         }
-        localStorage.setItem('family_stats_v2', JSON.stringify(stats));
+        localStorage.setItem('family_stats_v23', JSON.stringify(stats));
         state.idx++;
         document.getElementById('nextBtn').style.display = 'block';
         document.getElementById('optionsArea').style.pointerEvents = 'none';
         updateUI();
     }
 
-    function checkSpelling() {
-        const val = document.getElementById('spellInput').value.trim().toLowerCase();
-        check(val === state.pool[state.idx].en.toLowerCase());
-        document.getElementById('spellArea').style.display = 'none';
-    }
-
     function showReport() {
-        const list = document.getElementById('reportList');
-        list.innerHTML = '';
-        const names = {english:'אנגלית', bible:'תנ"ך', sci_life:'מדעים: מאפייני חיים', sci_org:'מדעים: רמות ארגון', sci_cell:'מדעים: התא'};
+        const list = document.getElementById('reportList'); list.innerHTML = '';
+        const names = {
+            english:'אנגלית', bible:'תנ"ך', 
+            sci_traits:'מדעים: מאפייני חיים', sci_needs:'מדעים: צורכי קיום', 
+            sci_org:'מדעים: רמות ארגון', sci_cell_structure:'מדעים: מבנה התא', sci_cell_process:'מדעים: תהליכים בתא'
+        };
         Object.keys(stats).forEach(key => {
-            const perc = stats[key].total ? Math.round((stats[key].correct/stats[key].total)*100) : 0;
-            const div = document.createElement('div');
-            div.className = 'report-item';
-            div.innerHTML = `<div><strong>${names[key]}</strong><br><small>הצלחה: ${perc}% (${stats[key].correct}/${stats[key].total})</small></div><button class="reset-btn" onclick="resetStat('${key}')">איפוס</button>`;
+            const p = stats[key].t ? Math.round((stats[key].c/stats[key].t)*100) : 0;
+            const div = document.createElement('div'); div.className = 'report-item';
+            div.innerHTML = `<div><strong>${names[key]}</strong><br><small>הצלחה: ${p}% (${stats[key].c}/${stats[key].t})</small></div><button class="reset-btn" onclick="resetStat('${key}')">איפוס</button>`;
             list.appendChild(div);
         });
         showScreen('reportScreen');
     }
 
     function resetStat(key) {
-        if(confirm(`לאפס נתוני ${key}?`)) {
-            stats[key] = {total:0, correct:0};
-            localStorage.setItem('family_stats_v2', JSON.stringify(stats));
-            showReport();
-        }
+        if(confirm(`לאפס את ${key}?`)) { stats[key] = {t:0, c:0}; localStorage.setItem('family_stats_v23', JSON.stringify(stats)); showReport(); }
     }
 
     function updateUI() {
@@ -276,10 +276,18 @@
     }
 
     function goHome() { showScreen('subjectScreen'); }
-    function end() { alert("כל הכבוד! סיימת את הפרק."); goHome(); }
+    function end() { alert("סיבוב הסתיים!"); goHome(); }
     function toggleTheme() {
         const t = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         document.body.setAttribute('data-theme', t);
+    }
+    function speak(text) {
+        const msg = new SpeechSynthesisUtterance(text); msg.lang = 'en-US'; window.speechSynthesis.speak(msg);
+    }
+    function checkSpelling() {
+        const val = document.getElementById('spellInput').value.trim().toLowerCase();
+        check(val === state.pool[state.idx].en.toLowerCase());
+        document.getElementById('spellArea').style.display = 'none';
     }
 </script>
 </body>
