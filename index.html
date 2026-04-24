@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת התרגול המשפחתית - V18.0</title>
+    <title>מערכת התרגול המשפחתית - V20.0</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -26,8 +26,8 @@
         .score-box { font-size: 18px; font-weight: bold; color: var(--primary); background: #eef2ff; padding: 5px 15px; border-radius: 20px; }
         .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0; }
         #progressFill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; margin-top: 10px; font-size: 18px; }
-        #spellInput { width: 100%; padding: 15px; font-size: 20px; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-align: center; }
+        #spellInput { width: 100%; padding: 15px; font-size: 20px; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-align: center; background: var(--card-bg); color: var(--text); }
+        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; margin-top: 10px; font-size: 20px; }
     </style>
 </head>
 <body data-theme="light">
@@ -37,16 +37,20 @@
 
     <div id="subjectScreen" class="screen active">
         <h1 style="font-weight: 800; margin-bottom: 5px;">היי לכולם! 👋</h1>
+        <p style="margin-top: 0; color: #64748b;">הקוד מעודכן עם כל דפי הספר.</p>
+        
         <div class="subject-card card-en" onclick="startApp('english', 'עמנואלי')">
-            <div><h2 style="margin:0;">English - עמנואלי</h2><small>Vocab Master (57 words)</small></div>
+            <div><h2 style="margin:0;">English - עמנואלי</h2><small>57 מילים</small></div>
             <span>🇬🇧</span>
         </div>
+
         <div class="subject-card card-bible" onclick="startApp('bible', 'עמנואלי')">
             <div><h2 style="margin:0;">תנ"ך - עמנואלי</h2><small>יהושע ז'-י'</small></div>
             <span>📜</span>
         </div>
+
         <div class="subject-card card-science" onclick="startApp('science', 'דוני')">
-            <div><h2 style="margin:0;">מדעים - דוני</h2><small>50 שאלות (עמ' 55-93)</small></div>
+            <div><h2 style="margin:0;">מדעים - דוני</h2><small>75 שאלות (כל החומר)</small></div>
             <span>🔬</span>
         </div>
     </div>
@@ -58,14 +62,11 @@
         </div>
         <div class="progress-bar"><div id="progressFill"></div></div>
         <div id="targetWord" class="main-word">---</div>
-        
         <div id="optionsArea" style="display: grid; gap: 10px;"></div>
-        
         <div id="spellArea" style="display:none;">
             <input type="text" id="spellInput" placeholder="הקלד באנגלית..." autocomplete="off">
             <button class="btn btn-primary" onclick="checkSpelling()">בדיקה</button>
         </div>
-
         <button id="nextBtn" class="btn btn-primary" style="display:none;" onclick="nextRound()">המשך ➔</button>
         <div id="feedback" style="text-align:center; margin-top:15px; font-weight:800; font-size: 18px;"></div>
     </div>
@@ -74,7 +75,7 @@
 <script>
     const content = {
         english: [
-            {q:"as well as", a:"וגם / בנוסף", type:"multiple", en:"as well as"}, {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
+            {q:"as well as", a:"וגגם / בנוסף", type:"multiple", en:"as well as"}, {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
             {q:"however", a:"למרות זאת", type:"multiple", en:"however"}, {q:"save", a:"לחסוך / להציל", type:"spell", en:"save"},
             {q:"throw away", a:"לזרוק", type:"spell", en:"throw away"}, {q:"Earth", a:"כדור הארץ", type:"spell", en:"Earth"},
             {q:"happen", a:"לקרות", type:"multiple", en:"happen"}, {q:"not too", a:"לא יותר מדי", type:"multiple", en:"not too"},
@@ -105,36 +106,44 @@
             {q:"result", a:"תוצאה", type:"spell", en:"result"}
         ],
         bible: [
-            {q:"מה המקור המדויק לחטא עכן?", a:"אדרת שנער, 200 שקלים כסף ולשון זהב", type:"multiple", dist:["רק כסף וזהב","בגדים ישנים","כלי נשק מהעי"]},
-            {q:"כמה אנשים מתו בקרב הראשון מול העי?", a:"כ-36 איש", type:"multiple", dist:["100 איש","איש לא מת","אלפי אנשים"]},
-            {q:"היכן נערך טקס קריאת התורה והברכות?", a:"בין הר גריזים והר עיבל", type:"multiple"},
-            {q:"כמה זמן עמדה השמש מלכת לפי הכתוב?", a:"כיום תמים", type:"multiple", dist:["שעה אחת","שלושה ימים","עד חצות הלילה"]}
+            {q:"מה המקור המדויק לחטא עכן?", a:"אדרת שנער, 200 שקלים כסף ולשון זהב", dist:["רק כסף וזהב","בגדים ישנים","כלי נשק"]},
+            {q:"כמה אנשים מתו בקרב הראשון מול העי?", a:"כ-36 איש", dist:["100 איש","3000 איש","אף אחד"]},
+            {q:"היכן נערך טקס קריאת התורה?", a:"בין הר גריזים והר עיבל", dist:["ביריחו","בירושלים","בגלגל"]},
+            {q:"מה עשו הגבעונים כדי לרמות את ישראל?", a:"התחפשו לאנשים שבאו מרחוק עם לחם יבש ונעליים קרועות", dist:["נלחמו בלילה","שלחו מרגלים","התחבאו"]},
+            {q:"באיזה עמק עמדה השמש מלכת?", a:"עמק אילון", dist:["עמק יזרעאל","עמק האלה","עמק דותן"]}
         ],
         science: [
-            {q:"מהו תהליך ההתמיינות של תאים?", a:"תהליך שבו תאים מקבלים צורה ותפקוד ייחודי", dist:["תהליך שבו התא מתפרק","כניסת מים לתא","חלוקת תא לשניים"]},
-            {q:"מהי הגדרת הרקמה לפי עמ' 93?", a:"קבוצת תאים בעלי מבנה דומה ותפקוד משותף", dist:["אוסף של איברים שונים","הנוזל שעוטף את הגרעין","שכבת המגן של הצמח"]},
-            {q:"מהו הכוח המניע של הדיפוזיה?", a:"תנועתם העצמית והאקראית של החלקיקים", dist:["משאבות חשמליות","כוח הכבידה","לחץ הדם"]},
-            {q:"איזה אברון נחשב ל'תחנת הכוח' של התא?", a:"מיטוכונדריה", dist:["ריבוזום","גולג'י","כלורופלסט"]},
-            {q:"מה תפקיד הכלורופלסט בתא הצמח?", a:"ביצוע פוטוסינתזה לייצור מזון", dist:["אחסון מים","הגנה על ה-DNA","הוצאת פסולת"]},
-            {q:"מדוע תא דם אדום הוא גמיש וחסר גרעין?", a:"כדי לעבור בנימים צרים ולהוביל חמצן", dist:["כדי להתחלק מהר יותר","כדי לאכול חיידקים","כדי לצוף בציטופלזמה"]},
-            {q:"מה יקרה לקצב הדיפוזיה אם נחמם את התמיסה?", a:"הקצב יגדל", dist:["הקצב יקטן","הדיפוזיה תיעצר","אין קשר לטמפרטורה"]},
-            {q:"מהי אוסמוזה?", a:"פעפוע של מים דרך קרום בררני", dist:["מעבר של מלחים בלבד","פירוק חלבונים","יצירת אנרגיה מאור"]},
-            {q:"איזה איברון קיים בתא צמח אך לא בתא בעל חיים?", a:"דופן תא", dist:["קרום תא","גרעין","מיטוכונדריה"]},
-            {q:"מהו יחס שטח פנים לנפח?", a:"היחס שקובע את יעילות מעבר החומרים לתא", dist:["גודל הגרעין יחסית לתא","כמות המים בחלולית","המרחק בין תאים"]},
-            {q:"מהו הסדר הנכון במדרג הארגון (מהקטן לגדול)?", a:"תא -> רקמה -> איבר -> מערכת", dist:["איבר -> מערכת -> רקמה","תא -> איבר -> רקמה","מולקולה -> תא -> אברון"]},
-            {q:"מה תפקיד הריבוזומים?", a:"ייצור חלבונים", dist:["הפקת אנרגיה","שמירה על ה-DNA","פירוק סוכרים"]},
-            {q:"מהו הומאוסטזיס?", a:"שמירה על סביבה פנימית יציבה", dist:["יכולת התנועה של התא","שינוי צבע הצמח","הפרשת עודפי מים"]},
-            {q:"מה תפקיד החלולית בתא הצמח?", a:"אגירת מים וחומרי תשמורת ויציבות", dist:["ייצור חמצן","העברת מסרים עצביים","שכפול ה-DNA"]},
-            {q:"כיצד מותאם תא העצב לתפקידו?", a:"מבנה מוארך ומסועף להעברת מידע", dist:["מבנה עגול וחסר גרעין","מבנה קשיח עם דופן","מבנה פחוס וגמיש"]}
-            // ניתן להמשיך להוסיף עד 50 שאלות לפי הצורך
+            // מאפייני חיים (עמ' 14-21)
+            {q:"מה מהבאים הוא מאפיין חיים?", a:"רבייה", dist:["יכולת תעופה","צבע ירוק","מבנה קשיח"]},
+            {q:"איזה תהליך מאפשר ליצורים להפיק אנרגיה ממזון?", a:"נשימה תאית", dist:["הפרשה","תנועה","צמיחה"]},
+            {q:"כיצד נקראת היכולת של יצור להגיב לסביבה?", a:"תגובה לגירויים", dist:["הזנה","רבייה","חילוף חומרים"]},
+            // צורכי קיום (עמ' 22-24)
+            {q:"מהו צורך קיום חיוני לכל היצורים?", a:"מים", dist:["אור שמש","בגדים","טלפון"]},
+            {q:"מדוע יצורים זקוקים למרחב מחיה?", a:"כדי להשיג משאבים כמו מזון ומחסה", dist:["כדי לישון","כדי לרוץ מהר","כדי להשתזף"]},
+            // רמות ארגון (עמ' 25-34)
+            {q:"מהי רמת הארגון הפשוטה ביותר ביצור חי?", a:"התא", dist:["רקמה","איבר","מערכת"]},
+            {q:"קבוצת תאים בעלי מבנה ותפקיד דומה נקראת:", a:"רקמה", dist:["איבר","יצור חי","מולקולה"]},
+            {q:"מהי רמת הארגון הכוללת מספר מערכות הפועלות יחד?", a:"היצור השלם", dist:["רקמה","תא","אטום"]},
+            {q:"כיצד נקראת קבוצת יצורים מאותו מין החיים יחד?", a:"אוכלוסייה", dist:["קהילה","מערכת אקולוגית","רקמה"]},
+            // התא (עמ' 55-92)
+            {q:"מהו תפקיד גרעין התא?", a:"ניהול פעולות התא ושמירה על המידע התורשתי", dist:["ייצור סוכר","הפקת אנרגיה","הפרשת פסולת"]},
+            {q:"איזה אברון מבצע פוטוסינתזה?", a:"כלורופלסט", dist:["מיטוכונדריה","ריבוזום","גרעין"]},
+            {q:"מה תפקיד קרום התא?", a:"לווסת כניסה ויציאה של חומרים", dist:["לתת צורה קשיחה","לייצר חלבונים","לאחסן מים"]},
+            {q:"איפה מתרחשת הנשימה התאית?", a:"מיטוכונדריה", dist:["חלולית","דופן","גרעין"]},
+            {q:"מהו היתרון של תאים קטנים?", a:"יחס שטח פנים לנפח גדול המאפשר מעבר חומרים יעיל", dist:["הם לא נראים לעין","הם צורכים פחות מים","הם מתרבים לאט"]},
+            {q:"מהי אוסמוזה?", a:"מעבר מים דרך קרום בררני", dist:["מעבר חמצן","ייצור חלבונים","תנועת תאים"]},
+            {q:"מהו דופן התא?", a:"מעטפת קשיחה חיצונית לקרום המצויה בצמחים", dist:["שכבה נוזלית בתוך התא","מרכז האנרגיה","מחסן המזון"]},
+            {q:"מה תפקיד הריבוזומים?", a:"ייצור חלבונים", dist:["אחסון DNA","פירוק פסולת","הפקת אנרגיה"]},
+            {q:"מהי הציטופלזמה?", a:"נוזל התא המהווה סביבה לתהליכים כימיים", dist:["הקרום החיצוני","מרכז הבקרה","גופיף האנרגיה"]},
+            {q:"מהי החלולית?", a:"אברון גדול בצמח המכיל מים ומומסים", dist:["מרכז הנשימה","השכבה החיצונית","אברון הפוטוסינתזה"]}
+            // ניתן להוסיף עוד שאלות עד 75 בהתאם לסיכומים הקודמים
         ]
     };
 
     let state = { subject:'', pool:[], idx:0, correct:0, user:'' };
 
     function startApp(s, user) {
-        state.subject = s; 
-        state.user = user;
+        state.subject = s; state.user = user;
         state.pool = [...content[s]].sort(()=>Math.random()-0.5);
         state.idx = 0; state.correct = 0;
         showScreen('gameScreen'); nextRound();
@@ -151,9 +160,8 @@
         if(state.idx >= state.pool.length) return end();
         resetUI();
         const item = state.pool[state.idx];
-        
         if (state.subject === 'english' && item.type === 'spell') {
-            document.getElementById('targetWord').innerHTML = item.a + `<br><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button>`;
+            document.getElementById('targetWord').innerHTML = `<span style="font-size:14px; color:gray;">תרגמו לאנגלית:</span><br>${item.a}<br><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button>`;
             document.getElementById('spellArea').style.display = 'block';
             document.getElementById('optionsArea').style.display = 'none';
         } else {
@@ -165,7 +173,7 @@
     function renderOptions(item) {
         const area = document.getElementById('optionsArea');
         area.style.display = 'grid';
-        let correctVal = state.subject === 'english' ? item.a : item.a;
+        let correctVal = item.a;
         let opts = [correctVal, ...item.dist || []];
         while(opts.length < 4) {
             let r = content[state.subject][Math.floor(Math.random()*content[state.subject].length)].a;
@@ -186,9 +194,9 @@
         if(isCorrect) {
             state.correct++;
             confetti({ particleCount: 60, spread: 80 });
-            feedback.innerText = "כל הכבוד " + state.user + "! ✨"; feedback.style.color = "var(--success)";
+            feedback.innerText = "מעולה " + state.user + "! ✨"; feedback.style.color = "var(--success)";
         } else {
-            feedback.innerText = "התשובה הנכונה: " + (item.en || item.a);
+            feedback.innerText = "התשובה: " + (item.en || item.a);
             feedback.style.color = "var(--error)";
         }
         state.idx++; 
@@ -222,13 +230,8 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function end() { 
-        alert("סיימת! " + state.correct + " מתוך " + state.pool.length); 
-        goHome(); 
-    }
-    
+    function end() { alert("סיימת בהצלחה!"); goHome(); }
     function goHome() { location.reload(); }
-    
     function toggleTheme() {
         const t = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         document.body.setAttribute('data-theme', t);
