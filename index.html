@@ -93,63 +93,6 @@
 <script>
     const content = {
         english: [
-            {q:"as well as", a:"וגם / בנוסף", type:"multiple", en:"as well as"},
-            {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
-            {q:"however", a:"למרות זאת", type:"multiple", en:"however"},
-            {q:"save", a:"לחסוך / להציל", type:"spell", en:"save"},
-            {q:"throw away", a:"לזרוק", type:"spell", en:"throw away"},
-            {q:"Earth", a:"כדור הארץ", type:"spell", en:"Earth"},
-            {q:"happen", a:"לקרות", type:"multiple", en:"happen"},
-            {q:"not too", a:"לא יותר מדי", type:"multiple", en:"not too"},
-            {q:"simple", a:"פשוט", type:"spell", en:"simple"},
-            {q:"trash", a:"זבל", type:"multiple", en:"trash"},
-            {q:"enough", a:"מספיק", type:"spell", en:"enough"},
-            {q:"hill", a:"גבעה", type:"multiple", en:"hill"},
-            {q:"refrigerator", a:"מקרר", type:"spell", en:"refrigerator"},
-            {q:"the future", a:"העתיד", type:"multiple", en:"the future"},
-            {q:"waste", a:"בזבוז / לבזבז", type:"spell", en:"waste"},
-            {q:"across", a:"מעבר ל-", type:"multiple", en:"across"},
-            {q:"high", a:"גבוה", type:"spell", en:"high"},
-            {q:"photo", a:"תמונה", type:"spell", en:"photo"},
-            {q:"suitcase", a:"מזוודה", type:"spell", en:"suitcase"},
-            {q:"without", a:"בלי", type:"multiple", en:"without"},
-            {q:"agree", a:"להסכים", type:"multiple", en:"agree"},
-            {q:"narrow", a:"צר", type:"spell", en:"narrow"},
-            {q:"slow", a:"איטי", type:"spell", en:"slow"},
-            {q:"toothbrush", a:"מברשת שיניים", type:"spell", en:"toothbrush"},
-            {q:"around", a:"מסביב", type:"multiple", en:"around"},
-            {q:"part", a:"חלק", type:"multiple", en:"part"},
-            {q:"stairs", a:"מדרגות", type:"spell", en:"stairs"},
-            {q:"way", a:"דרך / אופן", type:"multiple", en:"way"},
-            {q:"especially", a:"במיוחד", type:"multiple", en:"especially"},
-            {q:"exactly", a:"בדיוק", type:"spell", en:"exactly"},
-            {q:"fairly", a:"למדי / די", type:"multiple", en:"fairly"},
-            {q:"immediately", a:"מיד", type:"spell", en:"immediately"},
-            {q:"probably", a:"כנראה", type:"multiple", en:"probably"},
-            {q:"asleep", a:"ישן", type:"multiple", en:"asleep"},
-            {q:"come along", a:"להצטרף", type:"multiple", en:"come along"},
-            {q:"glasses", a:"משקפיים", type:"spell", en:"glasses"},
-            {q:"hang", a:"לתלות", type:"multiple", en:"hang"},
-            {q:"must", a:"חייב", type:"multiple", en:"must"},
-            {q:"of course", a:"כמובן", type:"multiple", en:"of course"},
-            {q:"somebody", a:"מישהו", type:"multiple", en:"somebody"},
-            {q:"steal", a:"לגנוב", type:"spell", en:"steal"},
-            {q:"strange", a:"מוזר", type:"spell", en:"strange"},
-            {q:"vacation", a:"חופשה", type:"multiple", en:"vacation"},
-            {q:"bright", a:"בוהק", type:"spell", en:"bright"},
-            {q:"enjoy yourself", a:"תיהנה", type:"multiple", en:"enjoy yourself"},
-            {q:"Guess what!", a:"נחשו מה!", type:"multiple", en:"Guess what"},
-            {q:"lovely", a:"מקסים", type:"multiple", en:"lovely"},
-            {q:"suit", a:"חליפה", type:"spell", en:"suit"},
-            {q:"cover", a:"לכסות", type:"multiple", en:"cover"},
-            {q:"exciting", a:"מרגש", type:"multiple", en:"exciting"},
-            {q:"hole", a:"חור", type:"spell", en:"hole"},
-            {q:"office", a:"משרד", type:"spell", en:"office"},
-            {q:"war", a:"מלחמה", type:"multiple", en:"war"},
-            {q:"deep", a:"עמוק", type:"spell", en:"deep"},
-            {q:"follow", a:"לעקוב", type:"spell", en:"follow"},
-            {q:"hope", a:"לקוות", type:"multiple", en:"hope"},
-            {q:"result", a:"תוצאה", type:"spell", en:"result"}
             {q:"as well as", a:"וגם / בנוסף", type:"multiple", dist:["רק", "אבל", "למרות זאת"]},
             {q:"happen", a:"לקרות", type:"multiple", dist:["לבזבז", "להציל", "לזרוק"]},
             {q:"however", a:"למרות זאת", type:"multiple", dist:["בנוסף", "כמובן", "במיוחד"]},
@@ -172,30 +115,29 @@
             {q:"vacation", a:"חופשה", type:"multiple", dist:["עבודה", "לימודים", "טיול"]}
         ],
         bible: [
-            {q:"מה גנב עכן מן החרם?", a:"אדרת שנער, כסף ולשון זהב", dist:["זהב בלבד","בגדי מלחמה","רק כסף"]},
-            {q:"כמה אנשים מתו בתבוסה הראשונה בעי?", a:"כ-36 איש", dist:["100 איש","3000 איש","איש לא מת"]},
-            {q:"מה עשו הגבעונים כדי להינצל?", a:"התחפשו לאנשים שבאו מארץ רחוקה", dist:["נלחמו בגבורה","ברחו למצרים","שילמו מס כבד"]},
-            {q:"מה קרה לשמש ולירח בעמק אילון?", a:"הם עמדו מלכת עד סיום הקרב", dist:["הם נעלמו","היה ליקוי חמה","הם הפכו לאדומים"]}
+            {q:"מי המעלו בחרם ביריחו?", a:"עכן בן כרמי", dist:["יהושע", "כלב בן יפונה", "פנחס"]},
+            {q:"איזה חפץ גנב עכן בנוסף לכסף וזהב?", a:"אדרת שנער", dist:["חרב מלחמה", "כתר מלך", "מנורה"]},
+            {q:"היכן עמדו השמש והירח?", a:"שמש בגבעון וירח בעמק אילון", dist:["ביריחו", "בגלגל", "בהר עיבל"]}
         ],
         sci_traits: [
-            {q:"מהו חילוף חומרים?", a:"קליטת חומרים, הפקת אנרגיה והפרשת פסולת", dist:["רק אכילה","רק נשימה","תנועה ממקום למקום"]},
-            {q:"מהי רבייה?", a:"העמדת צאצאים והמשכיות המין", dist:["גדילה בגובה","קליטת חמצן","שינה בלילה"]},
-            {q:"מהי הפרשה?", a:"סילוק חומרי פסולת ורעלים מהגוף", dist:["הזעה","נשימה","בניית תאים"]}
+            {q:"מהו המאפיין שבו יצור מפיק אנרגיה מחומרי מזון?", a:"נשימה", dist:["רבייה", "גדילה", "תנועה"]},
+            {q:"איזה מאפיין מבטיח את המשכיות המין?", a:"רבייה", dist:["הפרשה", "הזנה", "תגובה לגירויים"]},
+            {q:"מהו השם המדעי של כלל התהליכים הכימיים בגוף?", a:"חילוף חומרים (מטבוליזם)", dist:["פוטוסינתזה", "אוסמוזה", "דיפוזיה"]}
         ],
         sci_needs: [
-            {q:"מהם צורכי הקיום הבסיסיים?", a:"מים, מזון, חמצן, טמפרטורה, מרחב מחיה", dist:["כסף ובית","בגדים ואור","חמצן בלבד"]},
-            {q:"מאיפה צמחים מקבלים אנרגיה?", a:"מהשמש", dist:["מהאדמה","מהמים","מהחמצן"]}
+            {q:"מהו צורך קיום שאינו משותף לכל היצורים (למשל כאלו שחיים במערות)?", a:"אור שמש", dist:["מים", "חמצן", "מזון"]},
+            {q:"מדוע יצורים זקוקים לחמצן?", a:"להפקת אנרגיה מחומרי מזון בתאים", dist:["לצורך תנועה", "לצורך שתיית מים", "כדי לישון"]}
         ],
         sci_org: [
-            {q:"מה בונה את האיבר?", a:"מספר רקמות שונות הפועלות יחד", dist:["תא בודד","מערכת","יצור שלם"]},
-            {q:"מהי היחידה הבסיסית של החיים?", a:"התא", dist:["אטום","רקמה","איבר"]}
+            {q:"מה נמצא בין רמת הרקמה לרמת המערכת?", a:"איבר", dist:["תא", "אברון", "יצור"]},
+            {q:"מה בונה את הקהילה בטבע?", a:"מספר אוכלוסיות ממינים שונים", dist:["יצור בודד", "מערכת אקולוגית", "תאים"]}
         ],
         sci_cell_structure: [
-            {q:"מהו גרעין התא?", a:"מרכז הבקרה המכיל את ה-DNA", dist:["תחנת כוח","שער הכניסה","בית חרושת"]},
-            {q:"מה תפקיד המיטוכונדריה?", a:"נשימה תאית ואספקת אנרגיה", dist:["ייצור סוכר","הגנה","אחסון מים"]}
+            {q:"איזה אברון אחראי על ייצור חלבונים?", a:"ריבוזום", dist:["מיטוכונדריה", "גרעין", "חלולית"]},
+            {get q() { return "אברון בתא צמח המכיל פיגמנט ירוק:"; }, a:"כלורופלסט", dist:["ציטופלזמה", "דופן", "קרום"]}
         ],
         sci_cell_process: [
-            {q:"מהי דיפוזיה?", a:"מעבר חומר מריכוז גבוה לנמוך", dist:["מעבר מים בלבד","ייצור חלבונים","תנועת תאים"]}
+            {q:"מעבר מים מריכוז מלחים נמוך לגבוה נקרא:", a:"אוסמוזה", dist:["דיפוזיה", "נשימה", "הפרשה"]}
         ]
     };
 
@@ -318,7 +260,5 @@
         document.getElementById('themeIcon').innerText = t === 'light' ? '🌙' : '☀️';
     }
 </script>
-</body>
-</html>
 </body>
 </html>
