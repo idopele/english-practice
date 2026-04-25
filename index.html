@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת הלמידה - V23.0</title>
+    <title>מערכת הלמידה - V24.0</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,10 @@
         .app-container { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); overflow: hidden; position: relative; align-self: flex-start; }
         .screen { padding: 20px; display: none; }
         .active { display: block; }
-        .theme-toggle { position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 20px; cursor: pointer; z-index: 10; }
+        
+        /* תיקון המיקום של כפתור מצב לילה */
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: #e2e8f0; border: none; font-size: 18px; cursor: pointer; z-index: 100; padding: 5px 10px; border-radius: 12px; }
+        
         .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; margin-bottom: 10px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); text-align: right; }
@@ -23,14 +26,17 @@
         .card-bible { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .card-science { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
         .card-report { background: #64748b; }
-        .main-word { font-size: 20px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.4; }
-        .score-box { font-size: 18px; font-weight: bold; color: var(--primary); background: #eef2ff; padding: 5px 15px; border-radius: 20px; }
-        .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 10px 0; }
+        .main-word { font-size: 22px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.4; }
+        
+        /* מונה שאלות מוזז לשמאל כדי שלא יתנגש בכפתור לילה */
+        .score-box { font-size: 16px; font-weight: bold; color: var(--primary); background: #eef2ff; padding: 5px 12px; border-radius: 12px; position: absolute; top: 20px; left: 20px; }
+        
+        .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 50px 0 10px 0; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
         .report-item { background: var(--bg); padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
         .reset-btn { background: var(--error); color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
         #spellInput { width: 100%; padding: 15px; font-size: 20px; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-align: center; background: var(--card-bg); color: var(--text); }
-        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; margin-top: 10px; font-size: 20px; }
+        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; margin-top: 10px; font-size: 20px; }
     </style>
 </head>
 <body data-theme="light">
@@ -39,158 +45,160 @@
     <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon">🌙</button>
 
     <div id="subjectScreen" class="screen active">
-        <h1 style="font-weight: 800; margin-bottom: 5px;">שלום דוני ועמנואל 👋</h1>
-        <div class="subject-card card-en" onclick="startApp('english', 'עמנואלי')">
+        <h1 style="font-weight: 800; margin-bottom: 5px; margin-top: 20px;">שלום עמנואל ודוני 👋</h1>
+        <div class="subject-card card-en" onclick="startApp('english')">
             <div><h2 style="margin:0;">English</h2><small>57 מילים - עמנואלי</small></div><span>🇬🇧</span>
         </div>
-        <div class="subject-card card-bible" onclick="startApp('bible', 'עמנואלי')">
+        <div class="subject-card card-bible" onclick="startApp('bible')">
             <div><h2 style="margin:0;">תנ"ך</h2><small>יהושע ז'-י' - עמנואלי</small></div><span>📜</span>
         </div>
         <div class="subject-card card-science" onclick="showScienceMenu()">
-            <div><h2 style="margin:0;">מדעים</h2><small>5 שאלונים מפורטים - דוני</small></div><span>🔬</span>
+            <div><h2 style="margin:0;">מדעים</h2><small>5 שאלונים - דוני</small></div><span>🔬</span>
         </div>
         <div class="subject-card card-report" onclick="showReport()">
-            <div><h2 style="margin:0;">דוח הורה</h2><small>מעקב ואיפוס נתונים</small></div><span>📊</span>
+            <div><h2 style="margin:0;">דוח הורה</h2><small>מעקב ואיפוס</small></div><span>📊</span>
         </div>
     </div>
 
     <div id="scienceMenuScreen" class="screen">
-        <button onclick="goHome()" class="btn btn-outline" style="text-align:center;">➔ חזרה</button>
-        <h3 style="font-weight: 800;">בחר תת-נושא (דוני):</h3>
-        <div class="btn btn-primary" onclick="startApp('sci_traits', 'דוני')">1. מאפייני חיים (עמ' 14-21)</div>
-        <div class="btn btn-primary" onclick="startApp('sci_needs', 'דוני')">2. צורכי קיום (עמ' 22-24)</div>
-        <div class="btn btn-primary" onclick="startApp('sci_org', 'דוני')">3. רמות ארגון (עמ' 25-34)</div>
-        <div class="btn btn-primary" onclick="startApp('sci_cell_structure', 'דוני')">4. מבנה התא ואברונים</div>
-        <div class="btn btn-primary" onclick="startApp('sci_cell_process', 'דוני')">5. תהליכים בתא ויחס שטח פנים</div>
+        <button onclick="goHome()" class="btn btn-outline" style="text-align:center; margin-top:30px;">➔ חזרה</button>
+        <h3 style="font-weight: 800;">בחר נושא (דוני):</h3>
+        <div class="btn btn-primary" onclick="startApp('sci_traits')">מאפייני חיים (14-21)</div>
+        <div class="btn btn-primary" onclick="startApp('sci_needs')">צורכי קיום (22-24)</div>
+        <div class="btn btn-primary" onclick="startApp('sci_org')">רמות ארגון (25-34)</div>
+        <div class="btn btn-primary" onclick="startApp('sci_cell_structure')">מבנה התא (55-92)</div>
+        <div class="btn btn-primary" onclick="startApp('sci_cell_process')">תהליכים בתא</div>
     </div>
 
     <div id="gameScreen" class="screen">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button onclick="goHome()" style="background:none; border:none; cursor:pointer; font-size: 24px;">🏠</button>
-            <div id="scoreCounter" class="score-box">0/0</div>
-        </div>
+        <div id="scoreCounter" class="score-box">0/0</div>
         <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+        
         <div id="targetWord" class="main-word">---</div>
+        
         <div id="optionsArea" style="display: grid; gap: 10px;"></div>
+        
         <div id="spellArea" style="display:none;">
             <input type="text" id="spellInput" placeholder="הקלד באנגלית..." autocomplete="off">
             <button class="btn btn-primary" onclick="checkSpelling()">בדיקה</button>
         </div>
-        <button id="nextBtn" class="btn btn-primary" style="display:none;" onclick="nextRound()">המשך ➔</button>
+        
+        <button id="nextBtn" class="btn btn-primary" style="display:none; margin-top: 20px;" onclick="nextRound()">המשך ➔</button>
         <div id="feedback" style="text-align:center; margin-top:15px; font-weight:800; font-size: 18px;"></div>
+        
+        <button onclick="goHome()" class="btn btn-outline" style="margin-top: 30px; border:none; text-align: center; color: #64748b;">סיום וחזרה 🏠</button>
     </div>
 
     <div id="reportScreen" class="screen">
-        <button onclick="goHome()" class="btn btn-outline" style="text-align:center;">➔ חזרה</button>
-        <h2 style="font-weight: 800;">פירוט ביצועים</h2>
+        <button onclick="goHome()" class="btn btn-outline" style="text-align:center; margin-top:30px;">➔ חזרה</button>
+        <h2 style="font-weight: 800;">מצב למידה</h2>
         <div id="reportList"></div>
     </div>
 </div>
 
 <script>
+    // מאגר השאלות המלא
     const content = {
         english: [
-            {q:"as well as", a:"וגם / בנוסף", type:"multiple", en:"as well as"}, {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
-            {q:"however", a:"למרות זאת", type:"multiple", en:"however"}, {q:"save", a:"לחסוך / להציל", type:"spell", en:"save"},
-            {q:"throw away", a:"לזרוק", type:"spell", en:"throw away"}, {q:"Earth", a:"כדור הארץ", type:"spell", en:"Earth"},
-            {q:"happen", a:"לקרות", type:"multiple", en:"happen"}, {q:"not too", a:"לא יותר מדי", type:"multiple", en:"not too"},
-            {q:"simple", a:"פשוט", type:"spell", en:"simple"}, {q:"trash", a:"זבל", type:"multiple", en:"trash"},
-            {q:"enough", a:"מספיק", type:"spell", en:"enough"}, {q:"hill", a:"גבעה", type:"multiple", en:"hill"},
-            {q:"refrigerator", a:"מקרר", type:"spell", en:"refrigerator"}, {q:"the future", a:"העתיד", type:"multiple", en:"the future"},
-            {q:"waste", a:"בזבוז / לבזבז", type:"spell", en:"waste"}, {q:"across", a:"מעבר ל-", type:"multiple", en:"across"},
-            {q:"high", a:"גבוה", type:"spell", en:"high"}, {q:"photo", a:"תמונה", type:"spell", en:"photo"},
-            {q:"suitcase", a:"מזוודה", type:"spell", en:"suitcase"}, {q:"without", a:"בלי", type:"multiple", en:"without"},
-            {q:"agree", a:"להסכים", type:"multiple", en:"agree"}, {q:"narrow", a:"צר", type:"spell", en:"narrow"},
-            {q:"slow", a:"איטי", type:"spell", en:"slow"}, {q:"toothbrush", a:"מברשת שיניים", type:"spell", en:"toothbrush"},
-            {q:"around", a:"מסביב", type:"multiple", en:"around"}, {q:"part", a:"חלק", type:"multiple", en:"part"},
-            {q:"stairs", a:"מדרגות", type:"spell", en:"stairs"}, {q:"way", a:"דרך / אופן", type:"multiple", en:"way"},
-            {q:"especially", a:"במיוחד", type:"multiple", en:"especially"}, {q:"exactly", a:"בדיוק", type:"spell", en:"exactly"},
-            {q:"fairly", a:"למדי / די", type:"multiple", en:"fairly"}, {q:"immediately", a:"מיד", type:"spell", en:"immediately"},
-            {q:"probably", a:"כנראה", type:"multiple", en:"probably"}, {q:"asleep", a:"ישן", type:"multiple", en:"asleep"},
-            {q:"come along", a:"להצטרף", type:"multiple", en:"come along"}, {q:"glasses", a:"משקפיים", type:"spell", en:"glasses"},
-            {q:"hang", a:"לתלות", type:"multiple", en:"hang"}, {q:"must", a:"חייב", type:"multiple", en:"must"},
-            {q:"of course", a:"כמובן", type:"multiple", en:"of course"}, {q:"somebody", a:"מישהו", type:"multiple", en:"somebody"},
-            {q:"steal", a:"לגנוב", type:"spell", en:"steal"}, {q:"strange", a:"מוזר", type:"spell", en:"strange"},
-            {q:"vacation", a:"חופשה", type:"multiple", en:"vacation"}, {q:"bright", a:"בוהק", type:"spell", en:"bright"},
-            {q:"enjoy yourself", a:"תיהנה", type:"multiple", en:"enjoy yourself"}, {q:"Guess what!", a:"נחשו מה!", type:"multiple", en:"Guess what"},
-            {q:"lovely", a:"מקסים", type:"multiple", en:"lovely"}, {q:"suit", a:"חליפה", type:"spell", en:"suit"},
-            {q:"cover", a:"לכסות", type:"multiple", en:"cover"}, {q:"exciting", a:"מרגש", type:"multiple", en:"exciting"},
-            {q:"hole", a:"חור", type:"spell", en:"hole"}, {q:"office", a:"משרד", type:"spell", en:"office"},
-            {q:"war", a:"מלחמה", type:"multiple", en:"war"}, {q:"deep", a:"עמוק", type:"spell", en:"deep"},
-            {q:"follow", a:"לעקוב", type:"spell", en:"follow"}, {q:"hope", a:"לקוות", type:"multiple", en:"hope"},
+            {q:"as well as", a:"וגם / בנוסף", type:"multiple", en:"as well as"},
+            {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
+            {q:"however", a:"למרות זאת", type:"multiple", en:"however"},
+            {q:"save", a:"לחסוך / להציל", type:"spell", en:"save"},
+            {q:"throw away", a:"לזרוק", type:"spell", en:"throw away"},
+            {q:"Earth", a:"כדור הארץ", type:"spell", en:"Earth"},
+            {q:"happen", a:"לקרות", type:"multiple", en:"happen"},
+            {q:"not too", a:"לא יותר מדי", type:"multiple", en:"not too"},
+            {q:"simple", a:"פשוט", type:"spell", en:"simple"},
+            {q:"trash", a:"זבל", type:"multiple", en:"trash"},
+            {q:"enough", a:"מספיק", type:"spell", en:"enough"},
+            {q:"hill", a:"גבעה", type:"multiple", en:"hill"},
+            {q:"refrigerator", a:"מקרר", type:"spell", en:"refrigerator"},
+            {q:"the future", a:"העתיד", type:"multiple", en:"the future"},
+            {q:"waste", a:"בזבוז / לבזבז", type:"spell", en:"waste"},
+            {q:"across", a:"מעבר ל-", type:"multiple", en:"across"},
+            {q:"high", a:"גבוה", type:"spell", en:"high"},
+            {q:"photo", a:"תמונה", type:"spell", en:"photo"},
+            {q:"suitcase", a:"מזוודה", type:"spell", en:"suitcase"},
+            {q:"without", a:"בלי", type:"multiple", en:"without"},
+            {q:"agree", a:"להסכים", type:"multiple", en:"agree"},
+            {q:"narrow", a:"צר", type:"spell", en:"narrow"},
+            {q:"slow", a:"איטי", type:"spell", en:"slow"},
+            {q:"toothbrush", a:"מברשת שיניים", type:"spell", en:"toothbrush"},
+            {q:"around", a:"מסביב", type:"multiple", en:"around"},
+            {q:"part", a:"חלק", type:"multiple", en:"part"},
+            {q:"stairs", a:"מדרגות", type:"spell", en:"stairs"},
+            {q:"way", a:"דרך / אופן", type:"multiple", en:"way"},
+            {q:"especially", a:"במיוחד", type:"multiple", en:"especially"},
+            {q:"exactly", a:"בדיוק", type:"spell", en:"exactly"},
+            {q:"fairly", a:"למדי / די", type:"multiple", en:"fairly"},
+            {q:"immediately", a:"מיד", type:"spell", en:"immediately"},
+            {q:"probably", a:"כנראה", type:"multiple", en:"probably"},
+            {q:"asleep", a:"ישן", type:"multiple", en:"asleep"},
+            {q:"come along", a:"להצטרף", type:"multiple", en:"come along"},
+            {q:"glasses", a:"משקפיים", type:"spell", en:"glasses"},
+            {q:"hang", a:"לתלות", type:"multiple", en:"hang"},
+            {q:"must", a:"חייב", type:"multiple", en:"must"},
+            {q:"of course", a:"כמובן", type:"multiple", en:"of course"},
+            {q:"somebody", a:"מישהו", type:"multiple", en:"somebody"},
+            {q:"steal", a:"לגנוב", type:"spell", en:"steal"},
+            {q:"strange", a:"מוזר", type:"spell", en:"strange"},
+            {q:"vacation", a:"חופשה", type:"multiple", en:"vacation"},
+            {q:"bright", a:"בוהק", type:"spell", en:"bright"},
+            {q:"enjoy yourself", a:"תיהנה", type:"multiple", en:"enjoy yourself"},
+            {q:"Guess what!", a:"נחשו מה!", type:"multiple", en:"Guess what"},
+            {q:"lovely", a:"מקסים", type:"multiple", en:"lovely"},
+            {q:"suit", a:"חליפה", type:"spell", en:"suit"},
+            {q:"cover", a:"לכסות", type:"multiple", en:"cover"},
+            {q:"exciting", a:"מרגש", type:"multiple", en:"exciting"},
+            {q:"hole", a:"חור", type:"spell", en:"hole"},
+            {q:"office", a:"משרד", type:"spell", en:"office"},
+            {q:"war", a:"מלחמה", type:"multiple", en:"war"},
+            {q:"deep", a:"עמוק", type:"spell", en:"deep"},
+            {q:"follow", a:"לעקוב", type:"spell", en:"follow"},
+            {q:"hope", a:"לקוות", type:"multiple", en:"hope"},
             {q:"result", a:"תוצאה", type:"spell", en:"result"}
         ],
         bible: [
-            {q:"מה גנב עכן מן החרם?", a:"אדרת שנער, 200 שקלים כסף ולשון זהב", dist:["זהב בלבד","בגדי מלחמה","רק כסף"]},
+            {q:"מה גנב עכן מן החרם?", a:"אדרת שנער, כסף ולשון זהב", dist:["זהב בלבד","בגדי מלחמה","רק כסף"]},
             {q:"כמה אנשים מתו בתבוסה הראשונה בעי?", a:"כ-36 איש", dist:["100 איש","3000 איש","איש לא מת"]},
-            {q:"מי המלך שעמד בראש ברית חמשת המלכים?", a:"אדוני-צדק מלך ירושלים", dist:["מלך יריחו","מלך חברון","מלך העי"]},
             {q:"מה עשו הגבעונים כדי להינצל?", a:"התחפשו לאנשים שבאו מארץ רחוקה", dist:["נלחמו בגבורה","ברחו למצרים","שילמו מס כבד"]},
-            {q:"מה היה העונש של הגבעונים?", a:"להיות חוטבי עצים ושואבי מים", dist:["עבדות בשדה","גירוש מהארץ","מוות"]},
-            {q:"מה קרה לשמש ולירח בעמק אילון?", a:"הם עמדו מלכת עד סיום הקרב", dist:["הם נעלמו","היה ליקוי חמה","הם הפכו לאדומים"]},
-            {q:"איפה הסתתרו חמשת המלכים?", a:"במערה במקדה", dist:["ביריחו","בתוך בור","במדבר"]},
-            {q:"מי אמר: 'שמש בגבעון דום וירח בעמק אילון'?", a:"יהושע", dist:["משה","ה'","אלעזר הכהן"]},
-            {q:"מדוע ישראל הפסידו בקרב הראשון בעי?", a:"בגלל שמעלו בחרם (חטא עכן)", dist:["כי היו מעט חיילים","כי העי הייתה חזקה","כי לא התפללו"]},
-            {q:"איך גילו שזה עכן שחטא?", a:"עלו בגורל: שבט, משפחה, בית, גבר", dist:["הוא הודה מיד","המרגלים ראו אותו","ה' אמר את שמו"]}
+            {q:"מה קרה לשמש ולירח בעמק אילון?", a:"הם עמדו מלכת עד סיום הקרב", dist:["הם נעלמו","היה ליקוי חמה","הם הפכו לאדומים"]}
         ],
         sci_traits: [
-            {q:"מהו חילוף חומרים (מטבוליזם)?", a:"קליטת חומרים, הפקת אנרגיה והפרשת פסולת", dist:["רק אכילה","רק נשימה","תנועה ממקום למקום"]},
+            {q:"מהו חילוף חומרים?", a:"קליטת חומרים, הפקת אנרגיה והפרשת פסולת", dist:["רק אכילה","רק נשימה","תנועה ממקום למקום"]},
             {q:"מהי רבייה?", a:"העמדת צאצאים והמשכיות המין", dist:["גדילה בגובה","קליטת חמצן","שינה בלילה"]},
-            {q:"כיצד יצור מגיב לגירויים?", a:"קליטת מידע מהסביבה ותגובה אליו", dist:["ייצור צאצאים","הפרשת עודפי מים","אכילת מזון"]},
-            {q:"מהי גדילה והתפתחות?", a:"שינוי בלתי הפיך במידות הגוף ובמבנה", dist:["תנועה מהירה","נשימה תאית","אכילה מרובה"]},
-            {q:"האם תנועה חייבת להיות ממקום למקום?", a:"לא, יש תנועה פנימית (כמו זרימת דם או פתיחת פרח)", dist:["כן, תמיד","רק בבעלי חיים","רק בצמחים"]},
-            {q:"מה משותף לכל 7 מאפייני החיים?", a:"הם מתקיימים בכל יצור חי (ביוטי)", dist:["הם מתקיימים רק בחיות","הם דורשים אור שמש","הם מתקיימים רק בצמחים"]},
-            {q:"מהי הפרשה?", a:"סילוק חומרי פסולת ורעלים מהגוף", dist:["הזעת יתר","קליטת חמצן","בניית תאים"]},
-            {q:"כיצד צמחים מפיקים אנרגיה מחומרי מזון?", a:"בתהליך הנשימה התאית", dist:["בפוטוסינתזה בלבד","על ידי שתיית מים","הם לא צריכים אנרגיה"]}
+            {q:"מהי הפרשה?", a:"סילוק חומרי פסולת ורעלים מהגוף", dist:["הזעה","נשימה","בניית תאים"]}
         ],
         sci_needs: [
-            {q:"מהם צורכי הקיום הבסיסיים?", a:"מים, מזון, חמצן (לרוב), טמפרטורה, מרחב מחיה", dist:["בית, בגדים, כסף","טלפון, חברים, אוכל","חמצן בלבד"]},
-            {q:"מדוע יצורים זקוקים למזון?", a:"כדי להפיק אנרגיה לבניית הגוף ולפעולתו", dist:["כדי להיות שבעים","כדי לישון טוב","רק כדי לגדול"]},
-            {q:"מאיפה צמחים מקבלים את האנרגיה שלהם?", a:"מהשמש (אנרגיית אור שהופכת לכימית)", dist:["מהאדמה","מהמים","מהחמצן"]},
-            {q:"מדוע מים חיוניים לחיים?", a:"רוב התהליכים בתא מתרחשים בסביבה מימית", dist:["כדי שלא נהיה צמאים","כדי לשטוף את הגוף","רק לצמחים הם חיוניים"]},
-            {q:"מהו מרחב מחיה?", a:"מקום המספק ליצור את כל צורכי הקיום שלו", dist:["חדר פרטי","גינה גדולה","כדור הארץ"]},
-            {q:"איזו טמפרטורה דרושה לחיים?", a:"טווח המאפשר לתהליכים הכימיים בגוף לפעול", dist:["תמיד 25 מעלות","תמיד מעל 0","רק חום גבוה"]},
-            {q:"איזה גז נפלט מהצמחים כתוצר לוואי של פוטוסינתזה?", a:"חמצן", dist:["פחמן דו-חמצני","מימן","חנקן"]}
+            {q:"מהם צורכי הקיום הבסיסיים?", a:"מים, מזון, חמצן, טמפרטורה, מרחב מחיה", dist:["כסף ובית","בגדים ואור","חמצן בלבד"]},
+            {q:"מאיפה צמחים מקבלים אנרגיה?", a:"מהשמש", dist:["מהאדמה","מהמים","מהחמצן"]}
         ],
         sci_org: [
-            {q:"מהי רמת הארגון הפשוטה ביותר ביצור?", a:"התא", dist:["אטום","רקמה","איבר"]},
             {q:"מה בונה את האיבר?", a:"מספר רקמות שונות הפועלות יחד", dist:["תא בודד","מערכת","יצור שלם"]},
-            {q:"מהי מערכת אקולוגית?", a:"יצורים חיים והסביבה הלא חיה (אביוטית) ביניהם", dist:["קבוצת אוכלוסיות","רק חיות","רק צמחים"]},
-            {q:"מהו יצור (אורגניזם)?", a:"כלל המערכות הפועלות יחד בגוף אחד", dist:["תא אחד","קבוצת רקמות","מערכת אחת"]},
-            {q:"מה נמצא בתוך התא ומבצע תפקיד ספציפי?", a:"אברון", dist:["רקמה","איבר","מולקולה"]},
-            {q:"מה ההבדל בין אוכלוסייה לקהילה?", a:"אוכלוסייה היא ממין אחד, קהילה היא ממינים רבים", dist:["אין הבדל","אוכלוסייה גדולה יותר","קהילה היא רק צמחים"]}
+            {q:"מהי היחידה הבסיסית של החיים?", a:"התא", dist:["אטום","רקמה","איבר"]}
         ],
         sci_cell_structure: [
-            {q:"מהו גרעין התא?", a:"מרכז הבקרה המכיל את ה-DNA", dist:["תחנת כוח","שער הכניסה","בית חרושת לחלבונים"]},
-            {q:"מה תפקיד המיטוכונדריה?", a:"נשימה תאית ואספקת אנרגיה", dist:["ייצור סוכר","אחסון מים","הגנה"]},
-            {q:"איזה אברון משמש לייצור חלבונים?", a:"ריבוזום", dist:["חלולית","ציטופלזמה","כלורופלסט"]},
-            {q:"מה תפקיד קרום התא?", a:"מעטפת בררנית השומרת על הסביבה הפנימית", dist:["יציבות קשיחה","אחסון DNA","הפקת אנרגיה"]},
-            {q:"מהו הנוזל הממלא את רוב נפח התא?", a:"ציטופלזמה", dist:["חלולית","מים מזוקקים","דם"]},
-            {q:"אלו אברונים קיימים רק בתא צמח?", a:"דופן, כלורופלסט, חלולית גדולה", dist:["גרעין וקרום","מיטוכונדריה וציטופלזמה","ריבוזום ודופן"]},
-            {q:"מה תפקיד הדופן בתא הצמח?", a:"שמירה על יציבות והגנה מפני פגיעות חיצוניות", dist:["מעבר חומרים בררני","ביצוע פוטוסינתזה","ייצור חלבונים"]},
-            {q:"מהי החלולית?", a:"אברון המאחסן מים ומומסים ושומר על לחץ פנימי", dist:["מרכז האנרגיה","מחסן DNA","שער התא"]}
+            {q:"מהו גרעין התא?", a:"מרכז הבקרה המכיל את ה-DNA", dist:["תחנת כוח","שער הכניסה","בית חרושת"]},
+            {q:"מה תפקיד המיטוכונדריה?", a:"נשימה תאית ואספקת אנרגיה", dist:["ייצור סוכר","הגנה","אחסון מים"]}
         ],
         sci_cell_process: [
-            {q:"מהי דיפוזיה?", a:"מעבר חומר מריכוז גבוה לנמוך עד להשוואת ריכוזים", dist:["מעבר מים בלבד","מעבר חומר בעזרת אנרגיה","יצירת חלבונים"]},
-            {q:"מהי אוסמוזה?", a:"מעבר מים דרך קרום בררני מריכוז מלחים נמוך לגבוה", dist:["נשימה תאית","ייצור אנרגיה","תנועת תאים"]},
-            {q:"מדוע חשוב יחס שטח פנים לנפח בתאים?", a:"שטח פנים גדול מאפשר מעבר מהיר של חומרים לנפח התא", dist:["כדי שהתא יהיה כבד","כדי שהתא יתפוס מקום","זה לא חשוב"]},
-            {q:"מה יקרה לתא צמח שיוכנס לתמיסה מלוחה מאוד?", a:"הוא יעבור פלסמוליזה (הקרום יתנתק מהדופן כי מים יצאו)", dist:["הוא יתפוצץ","הוא יגדל","לא יקרה כלום"]},
-            {q:"בתהליך הנשימה התאית, מה הופך לאנרגיה?", a:"גלוקוז (סוכר) וחמצן", dist:["מים ופחמן","אור שמש","חלבונים"]},
-            {q:"איפה בתא מתבצעת הפוטוסינתזה?", a:"בכלורופלסטים", dist:["בגרעין","במיטוכונדריה","בריבוזומים"]}
+            {q:"מהי דיפוזיה?", a:"מעבר חומר מריכוז גבוה לנמוך", dist:["מעבר מים בלבד","ייצור חלבונים","תנועת תאים"]}
         ]
     };
 
-    let state = { subject:'', pool:[], idx:0, correct:0, user:'' };
-    let stats = JSON.parse(localStorage.getItem('family_stats_v23')) || {
+    let state = { subject:'', pool:[], idx:0, correct:0 };
+    let stats = JSON.parse(localStorage.getItem('family_stats_v24')) || {
         english: {t:0, c:0}, bible: {t:0, c:0},
         sci_traits: {t:0, c:0}, sci_needs: {t:0, c:0}, sci_org: {t:0, c:0},
         sci_cell_structure: {t:0, c:0}, sci_cell_process: {t:0, c:0}
     };
 
-    function startApp(s, user) {
-        state.subject = s; state.user = user;
+    function startApp(s) {
+        state.subject = s;
         state.pool = [...content[s]].sort(()=>Math.random()-0.5);
         state.idx = 0; state.correct = 0;
-        showScreen('gameScreen'); nextRound();
+        showScreen('gameScreen'); 
+        nextRound();
     }
 
     function showScienceMenu() { showScreen('scienceMenuScreen'); }
@@ -199,14 +207,22 @@
         if(state.idx >= state.pool.length) return end();
         resetUI();
         const item = state.pool[state.idx];
-        if (state.subject === 'english' && item.type === 'spell') {
-            document.getElementById('targetWord').innerHTML = `<span style="font-size:14px; color:gray;">תרגמו לאנגלית:</span><br>${item.a}<br><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button>`;
-            document.getElementById('spellArea').style.display = 'block';
-            document.getElementById('optionsArea').style.display = 'none';
+        
+        // תיקון הצגת השאלה באנגלית
+        if (state.subject === 'english') {
+            if(item.type === 'spell') {
+                document.getElementById('targetWord').innerHTML = `<small>תרגמו לאנגלית:</small><br><strong>${item.a}</strong><br><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button>`;
+                document.getElementById('spellArea').style.display = 'block';
+                document.getElementById('optionsArea').style.display = 'none';
+            } else {
+                document.getElementById('targetWord').innerHTML = `<small>מה הפירוש של:</small><br><strong>${item.q}</strong>`;
+                renderOptions(item);
+            }
         } else {
-            document.getElementById('targetWord').innerText = item.q || item.a;
+            document.getElementById('targetWord').innerText = item.q;
             renderOptions(item);
         }
+        updateUI();
     }
 
     function renderOptions(item) {
@@ -214,8 +230,10 @@
         area.style.display = 'grid';
         let opts = [item.a, ...item.dist].sort(()=>Math.random()-0.5);
         opts.forEach(o => {
-            const b = document.createElement('button'); b.className = 'btn btn-outline';
-            b.innerText = o; b.onclick = () => check(o === item.a);
+            const b = document.createElement('button');
+            b.className = 'btn btn-outline';
+            b.innerText = o;
+            b.onclick = () => check(o === item.a);
             area.appendChild(b);
         });
     }
@@ -224,41 +242,50 @@
         stats[state.subject].t++;
         if(isCorrect) {
             state.correct++; stats[state.subject].c++;
-            confetti({ particleCount: 50, spread: 70 });
-            document.getElementById('feedback').innerText = "מעולה! ✨";
+            confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
+            document.getElementById('feedback').innerHTML = "<span style='color:var(--success)'>מעולה! ✨</span>";
         } else {
-            document.getElementById('feedback').innerText = "לא נורא, התשובה: " + state.pool[state.idx].a;
+            document.getElementById('feedback').innerHTML = `<span style='color:var(--error)'>התשובה הנכונה: ${state.pool[state.idx].a}</span>`;
         }
-        localStorage.setItem('family_stats_v23', JSON.stringify(stats));
+        localStorage.setItem('family_stats_v24', JSON.stringify(stats));
         state.idx++;
         document.getElementById('nextBtn').style.display = 'block';
         document.getElementById('optionsArea').style.pointerEvents = 'none';
-        updateUI();
+    }
+
+    function checkSpelling() {
+        const val = document.getElementById('spellInput').value.trim().toLowerCase();
+        const correct = state.pool[state.idx].en.toLowerCase();
+        check(val === correct);
+    }
+
+    function updateUI() {
+        document.getElementById('scoreCounter').innerText = state.idx + " / " + state.pool.length;
+        document.getElementById('progressFill').style.width = (state.idx / state.pool.length) * 100 + "%";
     }
 
     function showReport() {
         const list = document.getElementById('reportList'); list.innerHTML = '';
         const names = {
             english:'אנגלית', bible:'תנ"ך', 
-            sci_traits:'מדעים: מאפייני חיים', sci_needs:'מדעים: צורכי קיום', 
-            sci_org:'מדעים: רמות ארגון', sci_cell_structure:'מדעים: מבנה התא', sci_cell_process:'מדעים: תהליכים בתא'
+            sci_traits:'מאפייני חיים', sci_needs:'צורכי קיום', 
+            sci_org:'רמות ארגון', sci_cell_structure:'מבנה התא', sci_cell_process:'תהליכים בתא'
         };
         Object.keys(stats).forEach(key => {
             const p = stats[key].t ? Math.round((stats[key].c/stats[key].t)*100) : 0;
             const div = document.createElement('div'); div.className = 'report-item';
-            div.innerHTML = `<div><strong>${names[key]}</strong><br><small>הצלחה: ${p}% (${stats[key].c}/${stats[key].t})</small></div><button class="reset-btn" onclick="resetStat('${key}')">איפוס</button>`;
+            div.innerHTML = `<div><strong>${names[key]}</strong><br><small>${p}% הצלחה (${stats[key].c}/${stats[key].t})</small></div><button class="reset-btn" onclick="resetStat('${key}')">איפוס</button>`;
             list.appendChild(div);
         });
         showScreen('reportScreen');
     }
 
     function resetStat(key) {
-        if(confirm(`לאפס את ${key}?`)) { stats[key] = {t:0, c:0}; localStorage.setItem('family_stats_v23', JSON.stringify(stats)); showReport(); }
-    }
-
-    function updateUI() {
-        document.getElementById('scoreCounter').innerText = state.correct + "/" + state.idx;
-        document.getElementById('progressFill').style.width = (state.idx/state.pool.length)*100 + "%";
+        if(confirm(`לאפס את הנתונים?`)) {
+            stats[key] = {t:0, c:0};
+            localStorage.setItem('family_stats_v24', JSON.stringify(stats));
+            showReport();
+        }
     }
 
     function showScreen(id) {
@@ -276,18 +303,14 @@
     }
 
     function goHome() { showScreen('subjectScreen'); }
-    function end() { alert("סיבוב הסתיים!"); goHome(); }
+    function end() { alert("כל הכבוד! סיימת את הפרק."); goHome(); }
+    function speak(t) { const m = new SpeechSynthesisUtterance(t); m.lang='en-US'; window.speechSynthesis.speak(m); }
+    
     function toggleTheme() {
-        const t = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        document.body.setAttribute('data-theme', t);
-    }
-    function speak(text) {
-        const msg = new SpeechSynthesisUtterance(text); msg.lang = 'en-US'; window.speechSynthesis.speak(msg);
-    }
-    function checkSpelling() {
-        const val = document.getElementById('spellInput').value.trim().toLowerCase();
-        check(val === state.pool[state.idx].en.toLowerCase());
-        document.getElementById('spellArea').style.display = 'none';
+        const b = document.body;
+        const t = b.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        b.setAttribute('data-theme', t);
+        document.getElementById('themeIcon').innerText = t === 'light' ? '🌙' : '☀️';
     }
 </script>
 </body>
