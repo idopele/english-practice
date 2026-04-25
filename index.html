@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת הלמידה המשפחתית - V25.0</title>
+    <title>מערכת הלמידה המשפחתית - V26.0</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -11,26 +11,26 @@
         [data-theme="dark"] { --bg: #0f172a; --text: #f1f5f9; --card-bg: #1e293b; --border: #475569; }
         * { box-sizing: border-box; font-family: 'Assistant', sans-serif; transition: 0.3s; }
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; margin: 0; padding: 10px; display: flex; justify-content: center; }
-        .app-container { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); overflow: hidden; position: relative; align-self: flex-start; }
+        .app-container { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); overflow: hidden; position: relative; align-self: flex-start; min-height: 600px; }
         .screen { padding: 20px; display: none; }
         .active { display: block; }
         .theme-toggle { position: absolute; top: 20px; right: 20px; background: #e2e8f0; border: none; font-size: 18px; cursor: pointer; z-index: 100; padding: 5px 10px; border-radius: 12px; }
+        .version-tag { text-align: center; font-size: 12px; opacity: 0.5; padding: 10px; margin-top: auto; }
         .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; margin-bottom: 10px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); text-align: right; }
+        .btn-hint { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; margin-top: 5px; padding: 8px; font-size: 14px; }
         .subject-card { color: white; padding: 20px; border-radius: 24px; margin-bottom: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .card-en { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); }
         .card-bible { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .card-science { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
         .card-report { background: #64748b; }
-        .main-word { font-size: 22px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.4; }
+        .main-word { font-size: 24px; font-weight: 800; margin: 15px 0; text-align: center; min-height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .score-box { font-size: 16px; font-weight: bold; color: var(--primary); background: #eef2ff; padding: 5px 12px; border-radius: 12px; position: absolute; top: 20px; left: 20px; }
         .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 60px 0 10px 0; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        .report-item { background: var(--bg); padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
-        .reset-btn { background: var(--error); color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
         #spellInput { width: 100%; padding: 15px; font-size: 20px; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-align: center; background: var(--card-bg); color: var(--text); }
-        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; margin-top: 10px; font-size: 20px; }
+        .speaker-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 24px; margin-bottom: 10px; }
     </style>
 </head>
 <body data-theme="light">
@@ -41,51 +41,48 @@
     <div id="subjectScreen" class="screen active">
         <h1 style="font-weight: 800; margin: 30px 0 10px 0;">היי עידו 👋</h1>
         <div class="subject-card card-en" onclick="startApp('english')">
-            <div><h2 style="margin:0;">English</h2><small>עמנואלי</small></div><span>🇬🇧</span>
+            <div><h2 style="margin:0;">English</h2><small>57 מילים מלאות</small></div><span>🇬🇧</span>
         </div>
         <div class="subject-card card-bible" onclick="startApp('bible')">
-            <div><h2 style="margin:0;">תנ"ך</h2><small>עמנואלי</small></div><span>📜</span>
+            <div><h2 style="margin:0;">תנ"ך</h2><small>יהושע ז'-י'</small></div><span>📜</span>
         </div>
         <div class="subject-card card-science" onclick="showScienceMenu()">
-            <div><h2 style="margin:0;">מדעים</h2><small>דוני</small></div><span>🔬</span>
+            <div><h2 style="margin:0;">מדעים</h2><small>כל הפרקים</small></div><span>🔬</span>
         </div>
         <div class="subject-card card-report" onclick="showReport()">
-            <div><h2 style="margin:0;">דוח הורה</h2><small>סטטיסטיקה</small></div><span>📊</span>
+            <div><h2 style="margin:0;">דוח הורה</h2><small>צפייה בנתונים</small></div><span>📊</span>
         </div>
+        <div class="version-tag">Version 26.0 (Stable)</div>
     </div>
 
     <div id="scienceMenuScreen" class="screen">
         <button onclick="goHome()" class="btn btn-outline" style="text-align:center; margin-top:30px;">➔ חזרה</button>
-        <h3 style="font-weight: 800;">בחרו נושא לתרגול:</h3>
+        <h3 style="font-weight: 800;">בחרו נושא במדעים:</h3>
         <div class="btn btn-primary" onclick="startApp('sci_traits')">מאפייני חיים (14-21)</div>
         <div class="btn btn-primary" onclick="startApp('sci_needs')">צורכי קיום (22-24)</div>
         <div class="btn btn-primary" onclick="startApp('sci_org')">רמות ארגון (25-34)</div>
         <div class="btn btn-primary" onclick="startApp('sci_cell_structure')">מבנה התא (55-92)</div>
-        <div class="btn btn-primary" onclick="startApp('sci_cell_process')">תהליכים בתא</div>
     </div>
 
     <div id="gameScreen" class="screen">
         <div id="scoreCounter" class="score-box">0/0</div>
         <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
-        
         <div id="targetWord" class="main-word">---</div>
-        
         <div id="optionsArea" style="display: grid; gap: 10px;"></div>
-        
         <div id="spellArea" style="display:none;">
             <input type="text" id="spellInput" placeholder="הקלידו באנגלית..." autocomplete="off">
             <button class="btn btn-primary" onclick="checkSpelling()">בדיקה</button>
+            <button id="hintBtn" class="btn btn-hint" onclick="showHint()">רמז 💡</button>
+            <div id="hintText" style="text-align:center; margin-top:5px; font-weight:bold; color:var(--primary);"></div>
         </div>
-        
         <button id="nextBtn" class="btn btn-primary" style="display:none; margin-top: 20px;" onclick="nextRound()">המשך ➔</button>
         <div id="feedback" style="text-align:center; margin-top:15px; font-weight:800; font-size: 18px;"></div>
-        
         <button onclick="goHome()" class="btn btn-outline" style="margin-top: 30px; border:none; text-align: center; color: #64748b;">סיום וחזרה 🏠</button>
     </div>
 
     <div id="reportScreen" class="screen">
         <button onclick="goHome()" class="btn btn-outline" style="text-align:center; margin-top:30px;">➔ חזרה</button>
-        <h2 style="font-weight: 800;">ביצועי הילדים</h2>
+        <h2 style="font-weight: 800;">מעקב התקדמות</h2>
         <div id="reportList"></div>
     </div>
 </div>
@@ -93,57 +90,51 @@
 <script>
     const content = {
         english: [
-            {q:"as well as", a:"וגם / בנוסף", type:"multiple", dist:["רק", "אבל", "למרות זאת"]},
-            {q:"happen", a:"לקרות", type:"multiple", dist:["לבזבז", "להציל", "לזרוק"]},
-            {q:"however", a:"למרות זאת", type:"multiple", dist:["בנוסף", "כמובן", "במיוחד"]},
-            {q:"grow", a:"לגדול / לצמוח", type:"spell", en:"grow"},
-            {q:"save", a:"לחסוך / להציל", type:"spell", en:"save"},
-            {q:"throw away", a:"לזרוק", type:"spell", en:"throw away"},
-            {q:"Earth", a:"כדור הארץ", type:"spell", en:"Earth"},
-            {q:"trash", a:"זבל", type:"multiple", dist:["עתיד", "מזוודה", "חור"]},
-            {q:"simple", a:"פשוט", type:"spell", en:"simple"},
-            {q:"enough", a:"מספיק", type:"spell", en:"enough"},
-            {q:"the future", a:"העתיד", type:"multiple", dist:["העבר", "הווה", "חלום"]},
-            {q:"photo", a:"תמונה", type:"spell", en:"photo"},
-            {q:"suitcase", a:"מזוודה", type:"spell", en:"suitcase"},
-            {q:"without", a:"בלי", type:"multiple", dist:["עם", "בתוך", "ליד"]},
-            {q:"narrow", a:"צר", type:"spell", en:"narrow"},
-            {q:"slow", a:"איטי", type:"spell", en:"slow"},
-            {q:"especially", a:"במיוחד", type:"multiple", dist:["בדרך כלל", "לעולם לא", "בקושי"]},
-            {q:"exactly", a:"בדיוק", type:"spell", en:"exactly"},
-            {q:"probably", a:"כנראה", type:"multiple", dist:["בטוח", "בלתי אפשרי", "תמיד"]},
-            {q:"vacation", a:"חופשה", type:"multiple", dist:["עבודה", "לימודים", "טיול"]}
+            {en:"as well as", he:"וגם / בנוסף"}, {en:"grow", he:"לגדול / לצמוח"}, {en:"however", he:"למרות זאת"},
+            {en:"save", he:"לחסוך / להציל"}, {en:"throw away", he:"לזרוק"}, {en:"Earth", he:"כדור הארץ"},
+            {en:"happen", he:"לקרות"}, {en:"not too", he:"לא יותר מדי"}, {en:"simple", he:"פשוט"},
+            {en:"trash", he:"זבל"}, {en:"enough", he:"מספיק"}, {en:"hill", he:"גבעה"},
+            {en:"refrigerator", he:"מקרר"}, {en:"the future", he:"העתיד"}, {en:"waste", he:"בזבוז / לבזבז"},
+            {en:"across", he:"מעבר ל-"}, {en:"high", he:"גבוה"}, {en:"photo", he:"תמונה"},
+            {en:"suitcase", he:"מזוודה"}, {en:"without", he:"בלי"}, {en:"agree", he:"להסכים"},
+            {en:"narrow", he:"צר"}, {en:"slow", he:"איטי"}, {en:"toothbrush", he:"מברשת שיניים"},
+            {en:"around", he:"מסביב"}, {en:"part", he:"חלק"}, {en:"stairs", he:"מדרגות"},
+            {en:"way", he:"דרך / אופן"}, {en:"especially", he:"במיוחד"}, {en:"exactly", he:"בדיוק"},
+            {en:"fairly", he:"למדי / די"}, {en:"immediately", he:"מיד"}, {en:"probably", he:"כנראה"},
+            {en:"asleep", he:"ישן"}, {en:"come along", he:"להצטרף"}, {en:"glasses", he:"משקפיים"},
+            {en:"hang", he:"לתלות"}, {en:"must", he:"חייב"}, {en:"of course", he:"כמובן"},
+            {en:"somebody", he:"מישהו"}, {en:"steal", he:"לגנוב"}, {en:"strange", he:"מוזר"},
+            {en:"vacation", he:"חופשה"}, {en:"bright", he:"בוהק"}, {en:"enjoy yourself", he:"תיהנה"},
+            {en:"Guess what!", he:"נחשו מה!"}, {en:"lovely", he:"מקסים"}, {en:"suit", he:"חליפה"},
+            {en:"cover", he:"לכסות"}, {en:"exciting", he:"מרגש"}, {en:"hole", he:"חור"},
+            {en:"office", he:"משרד"}, {en:"war", he:"מלחמה"}, {en:"deep", he:"עמוק"},
+            {en:"follow", he:"לעקוב"}, {en:"hope", he:"לקוות"}, {en:"result", he:"תוצאה"}
         ],
         bible: [
-            {q:"מי המעלו בחרם ביריחו?", a:"עכן בן כרמי", dist:["יהושע", "כלב בן יפונה", "פנחס"]},
-            {q:"איזה חפץ גנב עכן בנוסף לכסף וזהב?", a:"אדרת שנער", dist:["חרב מלחמה", "כתר מלך", "מנורה"]},
-            {q:"היכן עמדו השמש והירח?", a:"שמש בגבעון וירח בעמק אילון", dist:["ביריחו", "בגלגל", "בהר עיבל"]}
+            {q:"מה גנב עכן מהחרם?", a:"אדרת שנער, כסף ולשון זהב", dist:["בגדים רגילים","זהב בלבד","נשק"]},
+            {q:"מה עשו הגבעונים?", a:"רימו את יהושע שהם באו מרחוק", dist:["נלחמו חזק","ברחו למצרים","התפללו לה'"]},
+            {q:"כמה מלכים נלחמו נגד הגבעונים?", a:"חמישה מלכים", dist:["מלך אחד","שלושה מלכים","עשרה מלכים"]},
+            {q:"מה קרה בשמש?", a:"שמש בגבעון דום", dist:["היה ליקוי חמה","היה חושך","השמש נעלמה"]}
         ],
         sci_traits: [
-            {q:"מהו המאפיין שבו יצור מפיק אנרגיה מחומרי מזון?", a:"נשימה", dist:["רבייה", "גדילה", "תנועה"]},
-            {q:"איזה מאפיין מבטיח את המשכיות המין?", a:"רבייה", dist:["הפרשה", "הזנה", "תגובה לגירויים"]},
-            {q:"מהו השם המדעי של כלל התהליכים הכימיים בגוף?", a:"חילוף חומרים (מטבוליזם)", dist:["פוטוסינתזה", "אוסמוזה", "דיפוזיה"]}
+            {q:"מהם מאפייני החיים?", a:"נשימה, הזנה, רבייה, הפרשה, גדילה, תגובה לגירויים, תנועה", dist:["רק נשימה ואכילה","בגדים, בית ומים","דיבור ומחשבה"]},
+            {q:"מהו חילוף חומרים?", a:"קליטת חומרים, הפקת אנרגיה והפרשת פסולת", dist:["שינה עמוקה","ריצה מהירה","דיבור"]}
         ],
         sci_needs: [
-            {q:"מהו צורך קיום שאינו משותף לכל היצורים (למשל כאלו שחיים במערות)?", a:"אור שמש", dist:["מים", "חמצן", "מזון"]},
-            {q:"מדוע יצורים זקוקים לחמצן?", a:"להפקת אנרגיה מחומרי מזון בתאים", dist:["לצורך תנועה", "לצורך שתיית מים", "כדי לישון"]}
+            {q:"מהם צורכי קיום?", a:"חמצן, מים, מזון, טמפרטורה, מרחב מחיה", dist:["טלפון, מחשב, טלוויזיה","בגדים חמים בלבד","שוקולד וסוכריות"]}
         ],
         sci_org: [
-            {q:"מה נמצא בין רמת הרקמה לרמת המערכת?", a:"איבר", dist:["תא", "אברון", "יצור"]},
-            {q:"מה בונה את הקהילה בטבע?", a:"מספר אוכלוסיות ממינים שונים", dist:["יצור בודד", "מערכת אקולוגית", "תאים"]}
+            {q:"מה הסדר הנכון מהקטן לגדול?", a:"תא -> רקמה -> איבר -> מערכת -> יצור", dist:["יצור -> תא","איבר -> תא","תא -> מערכת -> איבר"]}
         ],
         sci_cell_structure: [
-            {q:"איזה אברון אחראי על ייצור חלבונים?", a:"ריבוזום", dist:["מיטוכונדריה", "גרעין", "חלולית"]},
-            {get q() { return "אברון בתא צמח המכיל פיגמנט ירוק:"; }, a:"כלורופלסט", dist:["ציטופלזמה", "דופן", "קרום"]}
-        ],
-        sci_cell_process: [
-            {q:"מעבר מים מריכוז מלחים נמוך לגבוה נקרא:", a:"אוסמוזה", dist:["דיפוזיה", "נשימה", "הפרשה"]}
+            {q:"מהו גרעין התא?", a:"מרכז הבקרה המכיל DNA", dist:["מעטפת התא","תחנת כוח","מחסן פסולת"]},
+            {q:"איזה אברון יש רק בתא צמח?", a:"כלורופלסט, דופן, חלולית גדולה", dist:["גרעין","מיטוכונדריה","ריבוזום"]}
         ]
     };
 
     let state = { subject:'', pool:[], idx:0, correct:0 };
-    let stats = JSON.parse(localStorage.getItem('family_stats_v25')) || {
-        english: {t:0, c:0}, bible: {t:0, c:0}, sci_traits: {t:0, c:0}, sci_needs: {t:0, c:0}, sci_org: {t:0, c:0}, sci_cell_structure: {t:0, c:0}, sci_cell_process: {t:0, c:0}
+    let stats = JSON.parse(localStorage.getItem('stats_v26')) || {
+        english: {t:0, c:0}, bible: {t:0, c:0}, sci_traits: {t:0, c:0}, sci_needs: {t:0, c:0}, sci_org: {t:0, c:0}, sci_cell_structure: {t:0, c:0}
     };
 
     function startApp(s) {
@@ -161,15 +152,11 @@
         resetUI();
         const item = state.pool[state.idx];
         
-        // הגדרת השאלה
         if (state.subject === 'english') {
-            if(item.type === 'spell') {
-                document.getElementById('targetWord').innerHTML = `<small>תרגמו לאנגלית:</small><br><strong>${item.a}</strong><br><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button>`;
-                document.getElementById('spellArea').style.display = 'block';
-            } else {
-                document.getElementById('targetWord').innerHTML = `<small>מה הפירוש של:</small><br><strong>${item.q}</strong>`;
-                renderOptions(item);
-            }
+            document.getElementById('targetWord').innerHTML = `
+                <button class="speaker-btn" onclick="speak('${item.en}')">🔊</button>
+                <small>תרגמו לאנגלית:</small><br><strong>${item.he}</strong>`;
+            document.getElementById('spellArea').style.display = 'block';
         } else {
             document.getElementById('targetWord').innerText = item.q;
             renderOptions(item);
@@ -179,7 +166,7 @@
 
     function renderOptions(item) {
         const area = document.getElementById('optionsArea');
-        area.innerHTML = ''; // ניקוי יסודי
+        area.innerHTML = '';
         area.style.display = 'grid';
         let opts = [item.a, ...item.dist].sort(()=>Math.random()-0.5);
         opts.forEach(o => {
@@ -198,10 +185,10 @@
             confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
             document.getElementById('feedback').innerHTML = "<span style='color:var(--success)'>נכון מאד! ✨</span>";
         } else {
-            const correctVal = state.pool[state.idx].type === 'spell' ? state.pool[state.idx].en : state.pool[state.idx].a;
+            const correctVal = state.subject === 'english' ? state.pool[state.idx].en : state.pool[state.idx].a;
             document.getElementById('feedback').innerHTML = `<span style='color:var(--error)'>טעות. הנכון הוא: ${correctVal}</span>`;
         }
-        localStorage.setItem('family_stats_v25', JSON.stringify(stats));
+        localStorage.setItem('stats_v26', JSON.stringify(stats));
         state.idx++;
         document.getElementById('nextBtn').style.display = 'block';
         document.getElementById('optionsArea').style.pointerEvents = 'none';
@@ -214,6 +201,11 @@
         check(val === correct);
     }
 
+    function showHint() {
+        const word = state.pool[state.idx].en;
+        document.getElementById('hintText').innerText = `מתחיל ב-${word[0]} ונגמר ב-${word[word.length-1]}`;
+    }
+
     function updateUI() {
         document.getElementById('scoreCounter').innerText = state.idx + " / " + state.pool.length;
         document.getElementById('progressFill').style.width = (state.idx / state.pool.length) * 100 + "%";
@@ -221,7 +213,7 @@
 
     function showReport() {
         const list = document.getElementById('reportList'); list.innerHTML = '';
-        const names = { english:'אנגלית', bible:'תנ"ך', sci_traits:'מאפייני חיים', sci_needs:'צורכי קיום', sci_org:'רמות ארגון', sci_cell_structure:'מבנה התא', sci_cell_process:'תהליכים בתא' };
+        const names = { english:'אנגלית', bible:'תנ"ך', sci_traits:'מאפייני חיים', sci_needs:'צורכי קיום', sci_org:'רמות ארגון', sci_cell_structure:'מבנה התא' };
         Object.keys(stats).forEach(key => {
             const p = stats[key].t ? Math.round((stats[key].c/stats[key].t)*100) : 0;
             const div = document.createElement('div'); div.className = 'report-item';
@@ -231,9 +223,7 @@
         showScreen('reportScreen');
     }
 
-    function resetStat(key) {
-        if(confirm(`לאפס את הנתונים?`)) { stats[key] = {t:0, c:0}; localStorage.setItem('family_stats_v25', JSON.stringify(stats)); showReport(); }
-    }
+    function resetStat(key) { if(confirm(`איפוס?`)) { stats[key]={t:0, c:0}; localStorage.setItem('stats_v26', JSON.stringify(stats)); showReport(); } }
 
     function resetUI() {
         document.getElementById('nextBtn').style.display = 'none';
@@ -244,6 +234,7 @@
         document.getElementById('spellArea').style.display = 'none';
         document.getElementById('spellArea').style.pointerEvents = 'all';
         document.getElementById('spellInput').value = '';
+        document.getElementById('hintText').innerText = '';
     }
 
     function goHome() { showScreen('subjectScreen'); }
