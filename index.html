@@ -3,82 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת הלמידה של עידו - V29.0</title>
+    <title>מערכת הלמידה המשפחתית - V30.0</title>
     <script src="words.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6366f1; --secondary: #ec4899; --success: #10b981; --error: #ef4444; --bg: #f8fafc; --text: #1e293b; --card-bg: #ffffff; }
+        :root { --primary: #6366f1; --success: #10b981; --error: #ef4444; --bg: #f8fafc; --text: #1e293b; --card-bg: #ffffff; }
         [data-theme="dark"] { --bg: #0f172a; --text: #f1f5f9; --card-bg: #1e293b; }
         * { box-sizing: border-box; font-family: 'Assistant', sans-serif; transition: 0.2s; }
         body { background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; }
         .app-container { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); min-height: 700px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .screen { padding: 25px; display: none; flex: 1; flex-direction: column; }
         .active { display: flex; }
-        .child-section { margin-bottom: 30px; border-bottom: 2px dashed #e2e8f0; padding-bottom: 15px; }
-        .child-name { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .btn { padding: 16px; border-radius: 18px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-        .btn-subject { background: #f1f5f9; color: var(--text); border: 1px solid #e2e8f0; }
-        .btn-primary { background: var(--primary); color: white; justify-content: center; }
-        .speed-controls { display: flex; gap: 5px; margin-bottom: 15px; justify-content: center; }
+        .child-section { margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
+        .child-name { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 15px; }
+        .btn { padding: 16px; border-radius: 18px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-subject { background: #f1f5f9; color: var(--text); border: 1px solid #e2e8f0; justify-content: space-between; }
+        .btn-primary { background: var(--primary); color: white; }
+        .speed-controls { display: flex; gap: 5px; margin: 10px 0; justify-content: center; }
         .speed-btn { padding: 8px 12px; border-radius: 10px; border: 1px solid #e2e8f0; cursor: pointer; background: white; font-size: 12px; }
         .speed-btn.active { background: var(--primary); color: white; }
-        .main-word { font-size: 32px; font-weight: 800; text-align: center; margin: 30px 0; }
-        .feedback-pop { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 40px; pointer-events: none; opacity: 0; transition: 0.5s; }
-        .report-card { background: #f1f5f9; padding: 15px; border-radius: 15px; margin-top: 10px; font-size: 14px; }
-        .error-word { color: var(--error); font-weight: bold; }
+        .main-word { font-size: 36px; font-weight: 800; text-align: center; margin: 20px 0; min-height: 50px; }
+        .progress-container { margin-top: 10px; position: relative; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--success); width: 0%; transition: 0.5s; }
+        .counter-text { text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 5px; color: var(--primary); }
+        .report-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 15px; margin-bottom: 10px; }
+        .error-tag { background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 6px; margin: 2px; display: inline-block; font-size: 12px; }
     </style>
 </head>
-<body data-theme="light">
+<body>
 
 <div class="app-container">
     <div id="landingScreen" class="screen active">
-        <h1 style="font-weight: 800; margin-bottom: 30px;">הלימודים שלכם 🚀</h1>
+        <h1 style="font-weight: 800; margin-bottom: 25px;">שלום עידו 👋</h1>
         
         <div class="child-section">
             <div class="child-name">🎓 דוני (כיתה ז')</div>
-            <button class="btn btn-subject" onclick="startApp('english_donny_7')">אנגלית - Vocabulary 🇬🇧</button>
-            <button class="btn btn-subject" onclick="startApp('sci_donny')">מדעים - תא ומאפייני חיים 🔬</button>
+            <button class="btn btn-subject" onclick="startApp('english_donny_7')">אנגלית - Vocabulary 🇬🇧<span>➔</span></button>
+            <button class="btn btn-subject" onclick="startApp('sci_donny')">מדעים 🔬<span>➔</span></button>
         </div>
 
         <div class="child-section">
             <div class="child-name">📖 עמנואלי (כיתה ו')</div>
-            <button class="btn btn-subject" onclick="startApp('english')">אנגלית - רשימה מלאה 🇬🇧</button>
-            <button class="btn btn-subject" onclick="startApp('bible')">תנ"ך - יהושע 📜</button>
+            <button class="btn btn-subject" onclick="startApp('english')">אנגלית 🇬🇧<span>➔</span></button>
+            <button class="btn btn-subject" onclick="startApp('bible')">תנ"ך 📜<span>➔</span></button>
         </div>
 
-        <button class="btn btn-subject" style="margin-top:auto" onclick="showReport()">📊 דוח הורה מסכם</button>
+        <button class="btn btn-primary" style="margin-top:auto" onclick="showReport()">📊 מעקב הורים</button>
     </div>
 
     <div id="gameScreen" class="screen">
-        <div class="speed-controls" id="speedArea">
-            <span style="font-size: 12px; align-self: center;">מהירות הקראה:</span>
-            <button class="speed-btn" onclick="setSpeed(0.5, this)">איטי</button>
-            <button class="speed-btn active" onclick="setSpeed(1, this)">בינוני</button>
-            <button class="speed-btn" onclick="setSpeed(1.5, this)">מהיר</button>
+        <div id="gameHeader">
+            <div class="counter-text" id="counterText">שאלה 1 מתוך --</div>
+            <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+        </div>
+
+        <div id="speedArea" style="display:none;">
+            <div class="speed-controls">
+                <button class="speed-btn" onclick="setRate(0.6, this)">איטי</button>
+                <button class="speed-btn active" onclick="setRate(1, this)">רגיל</button>
+                <button class="speed-btn" onclick="setRate(1.4, this)">מהיר</button>
+            </div>
         </div>
 
         <div id="targetWord" class="main-word">---</div>
-        
         <div id="optionsArea" style="display: grid; gap: 10px;"></div>
         
-        <button id="speakerBtn" class="btn btn-primary" style="background:#e2e8f0; color:#1e293b; margin-top:20px;" onclick="speakCurrent()">
+        <button class="btn btn-primary" style="background:#e2e8f0; color:#1e293b; margin-top:20px;" onclick="speakCurrent()">
             🔊 השמע שוב
         </button>
 
-        <div id="feedback" style="text-align:center; margin-top:20px; font-weight:800;"></div>
-    </div>
-
-    <div id="summaryScreen" class="screen">
-        <h2 id="summaryTitle">סיכום תרגול</h2>
-        <div id="summaryContent" class="report-card"></div>
-        <button class="btn btn-primary" style="margin-top:20px" onclick="goHome()">חזרה לתפריט</button>
+        <div id="feedback" style="text-align:center; margin-top:15px; font-weight:800; font-size: 18px;"></div>
     </div>
 
     <div id="reportScreen" class="screen">
-        <button class="btn btn-subject" onclick="goHome()">➔ חזרה</button>
-        <h2>מעקב הורים</h2>
+        <button class="btn btn-subject" onclick="goHome()">🏠 חזרה לתפריט</button>
+        <h2 style="margin: 20px 0 10px 0;">דוח למידה מצטבר</h2>
         <div id="fullReportList"></div>
+        <button class="btn btn-primary" style="background:var(--error); margin-top: auto;" onclick="clearStats()">🗑️ איפוס כל הנתונים</button>
     </div>
 </div>
 
@@ -86,65 +88,65 @@
     let state = {
         subject: '',
         pool: [],
-        errors: [], // מילים שטעה בהן
+        errors: [],
         idx: 0,
-        speechRate: 1,
-        history: [] // לתיעוד הדוח
+        rate: 1,
+        totalInitial: 0
     };
 
-    let parentData = JSON.parse(localStorage.getItem('parent_report_v29')) || {};
+    // טעינת נתונים קבועה מ-LocalStorage
+    let stats = JSON.parse(localStorage.getItem('parent_stats_v30')) || {};
 
     function startApp(s) {
         state.subject = s;
-        // ערבוב ראשוני
         state.pool = [...content[s]].sort(() => Math.random() - 0.5);
+        state.totalInitial = state.pool.length;
         state.idx = 0;
         state.errors = [];
-        state.history = [];
+        
         showScreen('gameScreen');
+        document.getElementById('speedArea').style.display = s.includes('english') ? 'block' : 'none';
         
-        // שליטה בהצגת מהירות (רק באנגלית)
-        document.getElementById('speedArea').style.display = s.includes('english') ? 'flex' : 'none';
-        
+        updateProgress();
         nextRound();
     }
 
     function nextRound() {
         if (state.idx >= state.pool.length) {
-            // אם יש טעויות, הוסף אותן שוב לסוף התור (מנגנון למידה)
             if (state.errors.length > 0) {
-                state.pool.push(...state.errors);
+                // מנגנון למידה: המילים שטעה בהן חוזרות לסבב נוסף
+                state.pool = [...state.errors].sort(() => Math.random() - 0.5);
                 state.errors = [];
-                // המשך לסיבוב הבא עם המילים המתוקנות
+                state.idx = 0;
+                alert("סיימנו את כל המילים! עכשיו חוזרים על המילים שהיו קצת קשות...");
             } else {
-                return showSummary();
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                alert("כל הכבוד! סיימת את התרגול בהצלחה!");
+                return goHome();
             }
         }
 
         const item = state.pool[state.idx];
-        resetUI();
+        resetRoundUI();
         
-        // הצגת המילה (הפוך לדרישה: מילה באנגלית, אפשרויות בעברית)
         document.getElementById('targetWord').innerText = item.en || item.q;
-        
-        // הקראה אוטומטית במעבר (רק באנגלית)
         if (state.subject.includes('english')) {
-            setTimeout(() => speakCurrent(), 300);
+            setTimeout(() => speakCurrent(), 400);
         }
 
         renderOptions(item);
+        updateProgress();
     }
 
     function renderOptions(item) {
         const area = document.getElementById('optionsArea');
-        let correctAnswer = item.he || item.a;
+        const correct = item.he || item.a;
         
-        // יצירת מסיחים
+        // יצירת מסיחים אקראיים
         let distractors = [];
         if (item.he) {
-            // עבור אנגלית - שלוף פירושים אקראיים אחרים
             distractors = content[state.subject]
-                .filter(w => w.he !== correctAnswer)
+                .filter(w => w.he !== correct)
                 .sort(() => Math.random() - 0.5)
                 .slice(0, 3)
                 .map(w => w.he);
@@ -152,90 +154,108 @@
             distractors = item.dist;
         }
 
-        let opts = [correctAnswer, ...distractors].sort(() => Math.random() - 0.5);
+        let opts = [correct, ...distractors].sort(() => Math.random() - 0.5);
         
         opts.forEach(o => {
             const b = document.createElement('button');
             b.className = 'btn btn-subject';
             b.innerText = o;
-            b.onclick = () => check(o === correctAnswer, item);
+            b.onclick = () => handleChoice(o === correct, item);
             area.appendChild(b);
         });
     }
 
-    function check(isCorrect, item) {
+    function handleChoice(isCorrect, item) {
         const feedback = document.getElementById('feedback');
-        if (isCorrect) {
-            feedback.innerHTML = "<span style='color:var(--success)'>נכון מאד! ✨</span>";
-            confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
-            state.history.push({word: item.en || item.q, status: 'correct'});
-        } else {
-            feedback.innerHTML = `<span style='color:var(--error)'>טעות. זה יחזור שוב בקרוב...</span>`;
-            state.errors.push(item);
-            state.history.push({word: item.en || item.q, status: 'wrong'});
-            
-            // עדכון דוח הורה על מילים בעייתיות
-            updateParentReport(item);
+        const subjectName = state.subject;
+
+        if (!stats[subjectName]) {
+            stats[subjectName] = { tries: 0, hits: 0, problematic: [] };
         }
+
+        stats[subjectName].tries++;
+
+        if (isCorrect) {
+            stats[subjectName].hits++;
+            feedback.innerHTML = "<span style='color:var(--success)'>נכון! ✨</span>";
+        } else {
+            feedback.innerHTML = `<span style='color:var(--error)'>טעות. המילה תחזור שוב.</span>`;
+            state.errors.push(item);
+            
+            // רישום המילה הבעייתית בדוח
+            let wordStr = item.en || item.q;
+            if (!stats[subjectName].problematic.includes(wordStr)) {
+                stats[subjectName].problematic.push(wordStr);
+            }
+        }
+
+        // שמירה ל-LocalStorage
+        localStorage.setItem('parent_stats_v30', JSON.stringify(stats));
 
         state.idx++;
-        setTimeout(nextRound, 1500); // מעבר אוטומטי
+        setTimeout(nextRound, 1200);
     }
 
-    function updateParentReport(item) {
-        const key = state.subject;
-        if (!parentData[key]) parentData[key] = { totalErrors: 0, problematicWords: [] };
-        parentData[key].totalErrors++;
-        let wordStr = item.en || item.q;
-        if (!parentData[key].problematicWords.includes(wordStr)) {
-            parentData[key].problematicWords.push(wordStr);
-        }
-        localStorage.setItem('parent_report_v29', JSON.stringify(parentData));
-    }
-
-    function speakCurrent() {
-        const item = state.pool[state.idx];
-        if (!item || !item.en) return;
-        const msg = new SpeechSynthesisUtterance(item.en);
-        msg.lang = 'en-US';
-        msg.rate = state.speechRate;
-        window.speechSynthesis.speak(msg);
-    }
-
-    function setSpeed(r, btn) {
-        state.speechRate = r;
-        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function showSummary() {
-        showScreen('summaryScreen');
-        const content = document.getElementById('summaryContent');
-        const mistakes = state.history.filter(h => h.status === 'wrong');
-        
-        content.innerHTML = mistakes.length > 0 
-            ? `<strong>מילים לחיזוק:</strong><br>${[...new Set(mistakes.map(m => m.word))].join(', ')}`
-            : `מעולה! ענית על הכל נכון בסיבוב הראשון! 🏆`;
+    function updateProgress() {
+        const progress = (state.idx / state.pool.length) * 100;
+        document.getElementById('progressBar').style.width = progress + "%";
+        document.getElementById('counterText').innerText = `מילה ${state.idx + 1} מתוך ${state.pool.length}`;
     }
 
     function showReport() {
         showScreen('reportScreen');
-        const list = document.getElementById('fullReportList');
-        list.innerHTML = '';
-        for (let s in parentData) {
+        const container = document.getElementById('fullReportList');
+        container.innerHTML = '';
+
+        if (Object.keys(stats).length === 0) {
+            container.innerHTML = "<p style='text-align:center; opacity:0.6;'>עדיין אין נתונים. התחילו לתרגל!</p>";
+            return;
+        }
+
+        for (let sub in stats) {
+            const data = stats[sub];
             const div = document.createElement('div');
             div.className = 'report-card';
-            div.innerHTML = `<strong>${s}:</strong> טעויות מצטברות: ${parentData[s].totalErrors}<br>
-                             מילים בעייתיות: <span class="error-word">${parentData[s].problematicWords.join(', ')}</span>`;
-            list.appendChild(div);
+            div.innerHTML = `
+                <strong>נושא: ${sub}</strong><br>
+                תשובות נכונות: ${data.hits} מתוך ${data.tries}<br>
+                <div style="margin-top:8px">
+                    <small>מילים שדרשו חזרה:</small><br>
+                    ${data.problematic.map(w => `<span class="error-tag">${w}</span>`).join('')}
+                </div>
+            `;
+            container.appendChild(div);
         }
     }
 
-    function resetUI() {
+    function speakCurrent() {
+        const item = state.pool[state.idx];
+        if (item && item.en) {
+            const u = new SpeechSynthesisUtterance(item.en);
+            u.lang = 'en-US';
+            u.rate = state.rate;
+            window.speechSynthesis.speak(u);
+        }
+    }
+
+    function setRate(r, btn) {
+        state.rate = r;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function clearStats() {
+        if(confirm("למחוק את כל היסטוריית הלמידה?")) {
+            stats = {};
+            localStorage.removeItem('parent_stats_v30');
+            showReport();
+        }
+    }
+
+    function resetRoundUI() {
         document.getElementById('feedback').innerText = '';
         document.getElementById('optionsArea').innerHTML = '';
     }
-
     function goHome() { showScreen('landingScreen'); }
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
