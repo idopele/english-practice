@@ -1,5 +1,5 @@
 const content = {
-    // דוני - שמות עצם (Nouns)
+    // דוני - אנגלית עמוד 86 (מחולק)
     donny_nouns_86: [
         {en:"action", he:"פעולה"}, {en:"advantage", he:"יתרון"}, {en:"adventure", he:"הרפתקה"},
         {en:"arrival", he:"הגעה"}, {en:"church", he:"כנסייה"}, {en:"cinema", he:"קולנוע"},
@@ -14,43 +14,71 @@ const content = {
         {en:"synagogue", he:"בית כנסת"}, {en:"ticket", he:"כרטיס"}, {en:"type", he:"סוג"},
         {en:"vacation", he:"חופשה"}
     ],
-
-    // דוני - פעלים, תארים ושונות (Verbs, Adjectives & Others)
     donny_grammar_86: [
-        // Verbs
         {en:"beat", he:"להביס / להכות"}, {en:"fight", he:"להילחם"}, {en:"insist", he:"להתעקש"},
         {en:"land", he:"לנחות"}, {en:"manage", he:"להסתדר / לנהל"}, {en:"offer", he:"להציע"},
         {en:"order", he:"להזמין / להורות"}, {en:"remain", he:"להישאר"}, {en:"save", he:"לחסוך / להציל"},
         {en:"seem", he:"להיראות / נדמה"}, {en:"suggest", he:"להציע"}, {en:"take off", he:"להמריא"},
-        {en:"think", he:"לחשוב"},
-        // Adjectives
-        {en:"central", he:"מרכזי"}, {en:"Christian", he:"נוצרי"}, {en:"cool", he:"קריר / מגניב"},
-        {en:"impossible", he:"בלתי אפשרי"}, {en:"Jewish", he:"יהודי"}, {en:"Muslim", he:"מוסלמי"},
-        {en:"ordinary", he:"רגיל / פשוט"}, {en:"real", he:"אמיתי"}, {en:"recent", he:"לאחרונה / אחרון"},
-        {en:"simple", he:"פשוט"}, {en:"useful", he:"שימושי"}, {en:"wonderful", he:"נפלא"},
-        // Other
-        {en:"although", he:"למרות ש-"}, {en:"anyhow", he:"בכל מקרה"}, {en:"anymore", he:"יותר (בשלילה)"}
+        {en:"think", he:"לחשוב"}, {en:"central", he:"מרכזי"}, {en:"Christian", he:"נוצרי"}, 
+        {en:"cool", he:"קריר / מגניב"}, {en:"impossible", he:"בלתי אפשרי"}, {en:"Jewish", he:"יהודי"}, 
+        {en:"Muslim", he:"מוסלמי"}, {en:"ordinary", he:"רגיל / פשוט"}, {en:"real", he:"אמיתי"}, 
+        {en:"recent", he:"לאחרונה / אחרון"}, {en:"simple", he:"פשוט"}, {en:"useful", he:"שימושי"}, 
+        {en:"wonderful", he:"נפלא"}, {en:"although", he:"למרות ש-"}, {en:"anyhow", he:"בכל מקרה"}, 
+        {en:"anymore", he:"יותר (בשלילה)"}, {en:"anyone", he:"מישהו"}, {en:"anyplace", he:"בכל מקום"},
+        {en:"anytime", he:"בכל זמן"}, {en:"anyway", he:"בכל אופן"}, {en:"anywhere", he:"בכל מקום"},
+        {en:"at the moment", he:"כרגע"}, {en:"especially", he:"במיוחד"}, {en:"even", he:"אפילו"},
+        {en:"I mean", he:"כלומר"}, {en:"in fact", he:"למעשה"}, {en:"it depends", he:"זה תלוי"},
+        {en:"near", he:"קרוב"}, {en:"normally", he:"בדרך כלל"}, {en:"something else", he:"משהו אחר"},
+        {en:"the middle", he:"האמצע"}, {en:"throughout", he:"לאורך כל ה-" }
     ],
-
-    // דוני - ביטויים ומילים נוספות (Expressions & Extra)
     donny_expressions_86: [
         {en:"have a good time", he:"ליהנות"}, {en:"have a problem", he:"להיתקל בבעיה"},
-        {en:"have a talk", he:"לשוחח"}, {en:"let go of", he:"לשחרר"},
-        {en:"take a test", he:"לעשות מבחן"}, {en:"take a tour", he:"לצאת לסיור"},
-        {en:"take a trip", he:"לצאת לטיול"}, {en:"take place", he:"להתקיים"},
-        {en:"think about", he:"לחשוב על"}, {en:"spend", he:"לבזבז / לבלות"},
-        {en:"feel free", he:"תרגיש חופשי"}, {en:"go crazy", he:"להשתגע"},
-        {en:"chance", he:"סיכוי / הזדמנות"}, {en:"opportunity", he:"הזדמנות"},
-        {en:"journey", he:"מסע"}, {en:"take part in", he:"להשתתף ב-"}
+        {en:"have a talk", he:"לשוחח"}, {en:"have (something) on", he:"ללבוש / להפעיל משהו"},
+        {en:"let go of", he:"לשחרר"}, {en:"let (something) in", he:"להכניס פנימה"},
+        {en:"let (something) out", he:"להוציא החוצה"}, {en:"take a test", he:"לעשות מבחן"},
+        {en:"take a tour", he:"לצאת לסיור"}, {en:"take a trip", he:"לצאת לטיול"},
+        {en:"take place", he:"להתקיים"}, {en:"think about", he:"לחשוב על"},
+        {en:"think of", he:"לחשוב על (רעיון)"}, {en:"think so", he:"לחשוב שכן"},
+        {en:"spend", he:"לבזבז / לבלות"}, {en:"feel free", he:"תרגיש חופשי"},
+        {en:"go crazy", he:"להשתגע"}, {en:"chance", he:"סיכוי / הזדמנות"},
+        {en:"life", he:"חיים"}, {en:"opportunity", he:"הזדמנות"}, {en:"surprise", he:"הפתעה"},
+        {en:"great", he:"נהדר"}, {en:"perfect", he:"מושלם"}, {en:"take part in", he:"להשתתף ב-"},
+        {en:"lovely", he:"מקסים"}, {en:"pay", he:"לשלם"}, {en:"journey", he:"מסע"},
+        {en:"history", he:"היסטוריה"}, {en:"meal", he:"ארוחה"}
     ],
-
-    // עמנואלי (כפי שביקשת)
+    // דוני - כתיבת דעה (מתוך הדפים)
+    donny_opinion_writing: [
+        {en:"in my opinion", he:"לדעתי"}, {en:"I believe that", he:"אני מאמין ש-"}, 
+        {en:"from my point of view", he:"מנקודת המבט שלי"}, {en:"first of all", he:"קודם כל"},
+        {en:"furthermore", he:"יתר על כן"}, {en:"on the other hand", he:"מצד שני"},
+        {en:"in conclusion", he:"לסיכום"}, {en:"I agree", he:"אני מסכים"}, 
+        {en:"I disagree", he:"אני לא מסכים"}, {en:"effective", he:"יעיל"}, {en:"solution", he:"פתרון"}
+    ],
+    // עמנואלי - אנגלית (הרשימה המלאה שוחזרה)
     english_emmanueli: [
-        {en:"as well as", he:"וגם / בנוסף"}, {en:"grow", he:"לגדול"}, {en:"however", he:"למרות זאת"},
-        {en:"save", he:"לחסוך"}, {en:"Earth", he:"כדור הארץ"}, {en:"trash", he:"זבל"}
+        {en:"as well as", he:"וגם / בנוסף"}, {en:"grow", he:"לגדול / לצמוח"}, {en:"however", he:"למרות זאת"},
+        {en:"save", he:"לחסוך / להציל"}, {en:"throw away", he:"לזרוק"}, {en:"Earth", he:"כדור הארץ"},
+        {en:"happen", he:"לקרות"}, {en:"not too", he:"לא יותר מדי"}, {en:"simple", he:"פשוט"},
+        {en:"trash", he:"זבל"}, {en:"enough", he:"מספיק"}, {en:"hill", he:"גבעה"},
+        {en:"refrigerator", he:"מקרר"}, {en:"the future", he:"העתיד"}, {en:"waste", he:"בזבוז / לבזבז"},
+        {en:"across", he:"מעבר ל-"}, {en:"high", he:"גבוה"}, {en:"photo", he:"תמונה"},
+        {en:"suitcase", he:"מזוודה"}, {en:"without", he:"בלי"}, {en:"agree", he:"להסכים"},
+        {en:"narrow", he:"צר"}, {en:"slow", he:"איטי"}, {en:"toothbrush", he:"מברשת שיניים"},
+        {en:"around", he:"מסביב"}, {en:"part", he:"חלק"}, {en:"stairs", he:"מדרגות"},
+        {en:"way", he:"דרך / אופן"}, {en:"especially", he:"במיוחד"}, {en:"exactly", he:"בדיוק"}
     ],
-
+    // תנ"ך (כל השאלות שוחזרו)
     bible: [
-        {q:"מי מעל בחרם ביריחו?", a:"עכן בן כרמי", dist:["יהושע", "רחב", "פנחס"]}
+        {q:"מי מעל בחרם ביריחו?", a:"עכן בן כרמי", dist:["יהושע", "רחב", "פנחס"]},
+        {q:"מה עשו הגבעונים ליהושע?", a:"רימו אותו שהם באו מארץ רחוקה", dist:["נלחמו בו", "עזרו לו בקרב", "ברחו"]},
+        {q:"מה קרה בשמש ובירח בעמק אילון?", a:"הם עמדו מלכת עד סיום הקרב", dist:["היה חושך", "היה מבול", "היה רעש אדמה"]},
+        {q:"מי הייתה רחב?", a:"אישה מיריחו שעזרה למרגלים", dist:["אשת יהושע", "המלכה של יריחו", "בת של כלב"]}
+    ],
+    // מדעים דוני (שוחזר)
+    sci_donny: [
+        {q:"מהם שבעת מאפייני החיים?", a:"נשימה, הזנה, רבייה, הפרשה, גדילה, תגובה לגירויים, תנועה", dist:["רק נשימה", "אוכל ומים", "דיבור ושינה"]},
+        {q:"מהו תפקיד הריבוזומים?", a:"ייצור חלבונים", dist:["הפקת אנרגיה", "הגנה על התא", "אחסון מים"]},
+        {q:"מהו הציטופלזמה?", a:"נוזל התא הממלא את רוב נפחו", dist:["קרום התא", "מרכז הבקרה", "תחנת הכוח"]},
+        {q:"מי נחשב ליחידת החיים הבסיסית?", a:"התא", dist:["האטום", "האיבר", "הדם"]}
     ]
 };
